@@ -112,7 +112,7 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
             <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-zinc-950 to-transparent hidden lg:block" />
           </div>
 
-          <div className="h-[62vh] lg:h-full lg:w-1/2 flex flex-col justify-center items-start px-8 sm:px-16 lg:px-20 pb-0 lg:pb-0 relative bg-zinc-950">
+          <div className="h-[62vh] lg:h-full lg:w-1/2 flex flex-col justify-center items-start px-8 sm:px-16 lg:px-20 pb-8 lg:pb-0 relative bg-zinc-950">
             <span className="text-cinnabar font-serif tracking-[0.3em] text-xs uppercase block mb-3">THE CRAFT</span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 uppercase tracking-wide">
               Obsessive<br />Preparation.
@@ -211,7 +211,7 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
         {/* ===================== SCENE 4: THE SPACE ===================== */}
         <section 
           ref={sectionRefs[3]} 
-          className="h-screen w-full snap-start relative flex flex-col justify-center md:justify-end p-8 sm:p-16 lg:p-24 bg-zinc-950 pb-8 md:pb-24"
+          className="h-screen w-full snap-start relative flex flex-col justify-center md:justify-end p-8 sm:p-16 lg:p-24 bg-zinc-950 pb-14 md:pb-24"
         >
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&auto=format&fit=crop&q=80')] bg-cover bg-center" />
           <div className="absolute inset-0 bg-black/60 bg-gradient-to-t from-zinc-950 via-transparent to-black/30" />
