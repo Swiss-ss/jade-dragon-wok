@@ -105,14 +105,14 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
           ref={sectionRefs[1]} 
           className="h-screen w-full snap-start relative flex flex-col lg:flex-row bg-zinc-950"
         >
-          <div className="h-[35vh] lg:h-full lg:w-1/2 relative overflow-hidden">
+          <div className="h-[25vh] lg:h-full lg:w-1/2 relative overflow-hidden">
             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1585032226651-759b368d7246?w=1200&auto=format&fit=crop&q=80')] bg-cover bg-center" />
             <div className="absolute inset-0 bg-black/40 lg:bg-transparent" />
             <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-zinc-950 to-transparent lg:hidden" />
             <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-zinc-950 to-transparent hidden lg:block" />
           </div>
 
-          <div className="h-[65vh] lg:h-full lg:w-1/2 flex flex-col justify-center items-start px-8 sm:px-16 lg:px-20 pb-20 lg:pb-0 relative bg-zinc-950">
+          <div className="h-[75vh] lg:h-full lg:w-1/2 flex flex-col justify-start lg:justify-center items-start px-8 sm:px-16 lg:px-20 pt-8 lg:pt-0 relative bg-zinc-950">
             <span className="text-cinnabar font-serif tracking-[0.3em] text-xs uppercase block mb-3">THE CRAFT</span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 uppercase tracking-wide">
               Obsessive<br />Preparation.
@@ -211,7 +211,7 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
         {/* ===================== SCENE 4: THE SPACE ===================== */}
         <section 
           ref={sectionRefs[3]} 
-          className="h-screen w-full snap-start relative flex flex-col justify-center md:justify-end p-8 sm:p-16 lg:p-24 bg-zinc-950 pb-28 md:pb-24"
+          className="h-screen w-full snap-start relative flex flex-col justify-start md:justify-end p-8 sm:p-16 lg:p-24 bg-zinc-950 pt-28 md:pt-0 pb-28 md:pb-24"
         >
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&auto=format&fit=crop&q=80')] bg-cover bg-center" />
           <div className="absolute inset-0 bg-black/60 bg-gradient-to-t from-zinc-950 via-transparent to-black/30" />
