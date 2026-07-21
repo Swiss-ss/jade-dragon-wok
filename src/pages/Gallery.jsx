@@ -57,7 +57,7 @@ export default function Gallery() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen w-full bg-zinc-950 text-zinc-50 pt-28 pb-16 px-6 sm:px-12 md:px-20 max-w-7xl mx-auto flex flex-col gap-10"
+      className="min-h-screen w-full bg-zinc-950 text-zinc-50 pt-20 lg:pt-28 pb-16 px-6 sm:px-12 md:px-20 max-w-7xl mx-auto flex flex-col gap-10"
     >
       {/* Back Button */}
       <div>
