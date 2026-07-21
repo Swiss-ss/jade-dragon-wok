@@ -170,14 +170,29 @@ function AppContent() {
           </Link>
         </nav>
 
-        {/* Circular Premium Hamburger Button (Visible on Mobile Only - Absolute Topmost click target) */}
-        <button 
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 hover:text-cinnabar hover:border-cinnabar transition-all shadow-md focus:outline-none cursor-pointer z-[999] relative"
-          aria-label="Toggle Menu"
-        >
-          {menuOpen ? <X size={16} /> : <Menu size={16} />}
-        </button>
+        <div className="flex items-center gap-3">
+          {/* Direct "Order" shortcut in header for quick student ordering (Mobile only) */}
+          {location.pathname !== '/menu' && (
+            <Link to="/menu" className="md:hidden">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-[#E34234] text-white font-serif tracking-widest text-[9px] sm:text-[10px] uppercase px-3.5 sm:px-4 py-2 rounded-full shadow-lg shadow-cinnabar/20 font-bold border border-cinnabar/10"
+              >
+                Order
+              </motion.button>
+            </Link>
+          )}
+
+          {/* Circular Premium Hamburger Button (Visible on Mobile Only - Absolute Topmost click target) */}
+          <button 
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="md:hidden w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 hover:text-cinnabar hover:border-cinnabar transition-all shadow-md focus:outline-none cursor-pointer z-[999] relative"
+            aria-label="Toggle Menu"
+          >
+            {menuOpen ? <X size={16} /> : <Menu size={16} />}
+          </button>
+        </div>
       </header>
 
       {/* 2. FLOATING DRAWER MENU (Mobile Only Inset Panel) */}
@@ -270,6 +285,14 @@ function AppContent() {
                 </Link>
               </nav>
 
+              <div className="pb-4">
+                <Link to="/contact" onClick={() => setMenuOpen(false)}>
+                  <button className="w-full bg-zinc-900 border border-zinc-850 hover:bg-zinc-800 hover:border-cinnabar/30 text-white font-serif tracking-wider text-[10px] uppercase py-2.5 rounded-xl transition-all font-bold cursor-pointer">
+                    Book a Table
+                  </button>
+                </Link>
+              </div>
+
               {/* Drawer Footer Contact */}
               <div className="border-t border-zinc-900 pt-4 text-center">
                 <span className="text-[8px] tracking-[0.25em] text-zinc-600 block uppercase mb-1">UPES BIDHOLI</span>
@@ -282,31 +305,6 @@ function AppContent() {
           </>
         )}
       </AnimatePresence>
-
-      {/* 3. RESPONSIVE DUAL-ACTION FAB (Book Table & Order Shortcut) */}
-      <div className="fixed bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-[80] w-auto">
-        <div className="bg-zinc-950/90 border border-zinc-800/80 backdrop-blur-md p-1.5 rounded-full shadow-[0_15px_40px_rgba(0,0,0,0.8)] flex items-center gap-1 sm:gap-2">
-          <Link to="/contact">
-            <motion.button 
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="text-zinc-400 hover:text-white font-serif tracking-wider text-[9px] sm:text-[10px] uppercase px-4 sm:px-5 py-2 rounded-full transition-colors whitespace-nowrap font-medium"
-            >
-              Book Table
-            </motion.button>
-          </Link>
-          <div className="w-[1px] h-4 bg-zinc-850" />
-          <Link to="/menu">
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-[#E34234] text-white font-serif tracking-widest text-[10px] sm:text-xs uppercase px-5 sm:px-6 py-2.5 rounded-full shadow-[0_6px_20px_rgba(227,66,52,0.35)] hover:bg-[#cf3527] transition-all whitespace-nowrap font-bold flex items-center gap-1.5"
-            >
-              Order Now
-            </motion.button>
-          </Link>
-        </div>
-      </div>
 
       {/* FLOATING CART BUTTON TRIGGER */}
       {cartItemCount > 0 && (
