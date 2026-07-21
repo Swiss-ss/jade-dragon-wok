@@ -112,7 +112,7 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
             <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-zinc-950 to-transparent hidden lg:block" />
           </div>
 
-          <div className="h-[62vh] lg:h-full lg:w-1/2 flex flex-col justify-center items-start px-8 sm:px-16 lg:px-20 pb-8 lg:pb-0 relative bg-zinc-950">
+          <div className="h-[62vh] lg:h-full lg:w-1/2 flex flex-col justify-start lg:justify-center items-start px-8 sm:px-16 lg:px-20 pt-4 lg:pt-0 pb-4 lg:pb-0 relative bg-zinc-950">
             <span className="text-cinnabar font-serif tracking-[0.3em] text-xs uppercase block mb-3">THE CRAFT</span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 uppercase tracking-wide">
               Obsessive<br />Preparation.
@@ -132,7 +132,7 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
         {/* ===================== SCENE 3: THE FEAST ===================== */}
         <section 
           ref={sectionRefs[2]} 
-          className="h-screen w-full snap-start relative bg-zinc-950 flex flex-col justify-center px-6 sm:px-12 md:px-20"
+          className="h-screen w-full snap-start relative bg-zinc-950 flex flex-col justify-center px-6 sm:px-12 md:px-20 pb-12 md:pb-0"
         >
           <div className="max-w-7xl mx-auto w-full">
             <div className="flex justify-between items-end mb-8">
