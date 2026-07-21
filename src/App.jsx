@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ShoppingBag, Plus, Minus, Trash2 } from 'lucide-react';
+import { Menu, X, ShoppingBag, Plus, Minus, Trash2, Instagram, Facebook, MessageCircle } from 'lucide-react';
 import Home from './pages/Home';
 import About from './pages/About';
 import MenuPage from './pages/Menu';
 import Gallery from './pages/Gallery';
 import LocationPage from './pages/Location';
 import Contact from './pages/Contact';
+import logoImg from './assets/logo.png';
 
 function AppContent() {
   const location = useLocation();
@@ -112,9 +113,12 @@ function AppContent() {
         <Link 
           to="/"
           onClick={() => { if (isHomePage) scrollToSection(0); }}
-          className="font-serif text-sm sm:text-base tracking-[0.2em] font-semibold text-zinc-50 hover:text-cinnabar transition-colors uppercase truncate max-w-[65%]"
+          className="flex items-center gap-2 hover:opacity-90 transition-opacity max-w-[60%] select-none cursor-pointer"
         >
-          JADE DRAGON WOK
+          <img src={logoImg} alt="Jade Dragon Wok Logo" className="h-8 w-8 sm:h-9 sm:w-9 object-contain" />
+          <span className="font-serif text-xs sm:text-sm tracking-[0.2em] font-semibold text-zinc-50 uppercase truncate">
+            JADE DRAGON
+          </span>
         </Link>
 
         {/* Horizontal Menu Bar (Visible on Desktop Only) */}
@@ -294,12 +298,45 @@ function AppContent() {
               </div>
 
               {/* Drawer Footer Contact */}
-              <div className="border-t border-zinc-900 pt-4 text-center">
-                <span className="text-[8px] tracking-[0.25em] text-zinc-600 block uppercase mb-1">UPES BIDHOLI</span>
-                <p className="text-[9px] text-zinc-500 font-sans leading-relaxed">
-                  +91 92196 03033<br />
-                  +91 92589 83691
-                </p>
+              <div className="border-t border-zinc-900 pt-4 text-center flex flex-col gap-3">
+                <div>
+                  <span className="text-[8px] tracking-[0.25em] text-zinc-600 block uppercase mb-1">UPES BIDHOLI</span>
+                  <p className="text-[9px] text-zinc-500 font-sans leading-relaxed">
+                    +91 92196 03033<br />
+                    +91 92589 83691
+                  </p>
+                </div>
+                
+                {/* Social media links row in drawer */}
+                <div className="flex justify-center items-center gap-4 text-zinc-500 pt-1">
+                  <a 
+                    href="https://instagram.com/jadedragonwok" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="hover:text-cinnabar transition-colors cursor-pointer" 
+                    aria-label="Instagram"
+                  >
+                    <Instagram size={14} />
+                  </a>
+                  <a 
+                    href="https://facebook.com/jadedragonwok" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="hover:text-cinnabar transition-colors cursor-pointer" 
+                    aria-label="Facebook"
+                  >
+                    <Facebook size={14} />
+                  </a>
+                  <a 
+                    href="https://wa.me/919219603033" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="hover:text-cinnabar transition-colors cursor-pointer" 
+                    aria-label="WhatsApp"
+                  >
+                    <MessageCircle size={14} />
+                  </a>
+                </div>
               </div>
             </motion.div>
           </>

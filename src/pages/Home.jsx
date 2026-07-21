@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Calendar, Clock, Users, Check, Sparkles, MapPin, Phone, ArrowRight } from 'lucide-react';
+import { ChevronDown, Calendar, Clock, Users, Check, Sparkles, MapPin, Phone, ArrowRight, Instagram, Facebook, MessageCircle } from 'lucide-react';
 
 export default function Home({ scrollToSection, activeSection, onSectionChange, sectionRefs }) {
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
@@ -331,8 +331,40 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
             </div>
           </div>
           
-          <div className="absolute bottom-16 text-center text-zinc-500 font-sans text-xs tracking-widest uppercase flex items-center gap-1">
-            <Sparkles size={12} className="text-secondary" /> Jade Dragon Wok Cafe • Bidholi
+          <div className="absolute bottom-8 flex flex-col items-center gap-3.5">
+            <div className="flex items-center gap-5 text-zinc-500">
+              <a 
+                href="https://instagram.com/jadedragonwok" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="hover:text-cinnabar transition-colors cursor-pointer"
+                aria-label="Instagram"
+              >
+                <Instagram size={16} />
+              </a>
+              <a 
+                href="https://facebook.com/jadedragonwok" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="hover:text-cinnabar transition-colors cursor-pointer"
+                aria-label="Facebook"
+              >
+                <Facebook size={16} />
+              </a>
+              <a 
+                href="https://wa.me/919219603033" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="hover:text-cinnabar transition-colors cursor-pointer"
+                aria-label="WhatsApp"
+              >
+                <MessageCircle size={16} />
+              </a>
+            </div>
+
+            <div className="text-center text-zinc-600 font-sans text-[10px] tracking-widest uppercase flex items-center gap-1">
+              <Sparkles size={10} className="text-zinc-600" /> Jade Dragon Wok Cafe • Bidholi
+            </div>
           </div>
         </section>
 
