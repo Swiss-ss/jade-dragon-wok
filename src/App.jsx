@@ -24,7 +24,8 @@ function AppContent() {
   const [studentInfo, setStudentInfo] = useState({
     name: '',
     location: '',
-    payment: 'UPI (GPay/PhonePe)'
+    payment: 'UPI (GPay/PhonePe)',
+    notes: ''
   });
 
   // Section Refs for snapping / scroll tracking (used only on Home page)
@@ -82,19 +83,36 @@ function AppContent() {
     e.preventDefault();
     if (cart.length === 0) return;
 
-    const header = `*JADE DRAGON WOK — ORDER CONFIRMATION*`;
-    const details = `*Name:* ${studentInfo.name}\n*Delivery Area:* ${studentInfo.location}\n*Payment Mode:* ${studentInfo.payment}\n`;
-    
-    let itemsList = `*Items Ordered:*\n`;
+    const orderId = 'JDW-' + Math.floor(1000 + Math.random() * 9000);
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+    const formattedTime = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+    const header = `⛩️ *JADE DRAGON WOK CAFE — NEW ORDER*\n──────────────────────────────`;
+    const orderMeta = `🆔 *Order Ref:* #${orderId}\n📅 *Time:* ${formattedDate}, ${formattedTime}`;
+
+    const customerDetails = `👤 *CUSTOMER DETAILS*\n• *Name:* ${studentInfo.name.trim()}\n• *Delivery Location:* ${studentInfo.location.trim()}\n• *Payment Method:* ${studentInfo.payment}`;
+
+    let itemsList = `📋 *ORDER SUMMARY*\n`;
     cart.forEach((item) => {
-      itemsList += `• ${item.qty}x ${item.name} (${item.price} each) - ₹${item.numericPrice * item.qty}\n`;
+      itemsList += `• ${item.qty}x ${item.name} — ₹${item.numericPrice * item.qty}\n`;
     });
 
-    const footer = `*Total Bill:* ₹${cartTotal}\n\n_Please confirm prep and delivery time._`;
-    const fullMessage = `${header}\n\n${details}\n${itemsList}\n${footer}`;
-    
+    const totalBlock = `──────────────────────────────\n💰 *TOTAL BILL:* *₹${cartTotal}*\n──────────────────────────────`;
+
+    const notesBlock = studentInfo.notes?.trim() 
+      ? `📝 *Special Instructions:*\n_"${studentInfo.notes.trim()}"_` 
+      : null;
+
+    const footer = `🚀 *Sent via Jade Dragon Wok Online Store*\n_Please reply to confirm order acceptance & estimated preparation time._`;
+
+    const fullMessage = [header, orderMeta, customerDetails, itemsList, totalBlock, notesBlock, footer]
+      .filter(Boolean)
+      .join('\n\n');
+
     const encodedMessage = encodeURIComponent(fullMessage);
-    const whatsappUrl = `https://wa.me/917017654643?text=${encodedMessage}`;
+    // WhatsApp destination number set to +91 92196 03033
+    const whatsappUrl = `https://wa.me/919219603033?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
   };
 
@@ -475,6 +493,18 @@ function AppContent() {
                       <option value="UPI (GPay/PhonePe)">UPI (GPay/PhonePe/Paytm)</option>
                       <option value="Cash on Delivery (COD)">Cash on Delivery (COD)</option>
                     </select>
+                  </div>
+
+                  {/* Cooking Instructions / Special Note (Optional) */}
+                  <div className="space-y-1">
+                    <label className="text-[8px] sm:text-[9px] tracking-wider uppercase text-zinc-400">Special Instructions (Optional)</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. Less spicy, extra sauce, etc."
+                      value={studentInfo.notes}
+                      onChange={(e) => setStudentInfo({ ...studentInfo, notes: e.target.value })}
+                      className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-cinnabar/80"
+                    />
                   </div>
 
                   <motion.button
