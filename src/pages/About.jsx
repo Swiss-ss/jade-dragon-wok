@@ -25,8 +25,8 @@ export default function About() {
       <div className="flex flex-col gap-4">
         <span className="text-cinnabar font-serif tracking-[0.3em] text-xs uppercase block">THE HERITAGE</span>
         <h1 className="font-serif text-4xl sm:text-6xl md:text-7xl font-bold uppercase tracking-tight leading-tight">
-          Fiery Spirit,<br />
-          <span className="italic font-normal text-zinc-300 normal-case">Bidholi's Pride.</span>
+          Bidholi's Best-Loved<br />
+          <span className="italic font-normal text-zinc-300 normal-case">Asian Cafe, Since Day One.</span>
         </h1>
       </div>
 
@@ -46,34 +46,34 @@ export default function About() {
         {/* Narrative Copy */}
         <div className="flex flex-col gap-6 text-zinc-400 font-sans text-sm sm:text-base leading-relaxed">
           <p>
-            Founded by culinary enthusiasts with a vision to bring authentic East Asian flavors to the high foothills of Bidholi, Dehradun, **Jade Dragon Wok** has grown into a local legend. Positioned just minutes away from the vibrant UPES campus, we represent an escape into authentic, warmth-infused dining.
+            Founded by culinary enthusiasts with a vision to bring authentic Chinese and East Asian flavours to the foothills of Bidholi, Dehradun, <strong>Jade Dragon Wok</strong> has grown into a local legend. Positioned just minutes away from the UPES campus, we are the go-to Asian restaurant for students, families, and food lovers across Dehradun.
           </p>
           <p>
-            We believe that real food requires raw, uncompromising effort. That is why we don't rely on pre-packaged pastes or factory-made noodles. Everything you taste here — from the garlic-infused soy to the signature chili flakes — is custom-roasted and hand-blended by our kitchen crew.
+            We believe that real food requires raw, uncompromising effort. Every dish at our Bidholi cafe — from hand-pulled noodles and steamed dim sum to fiery Schezwan fried rice — is prepared fresh daily. We never rely on pre-packaged pastes or factory-made ingredients. Our garlic-infused soy, signature chili flakes, and sauces are custom-roasted and hand-blended by our kitchen crew.
           </p>
           
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 border-t border-zinc-900">
             <div className="flex flex-col gap-2">
               <Flame className="text-cinnabar" size={20} />
               <h4 className="font-serif text-white text-sm uppercase tracking-wider font-bold">Wok Hei</h4>
-              <p className="text-xs text-zinc-500">Perfected high-heat smoke-infused cooking.</p>
+              <p className="text-xs text-zinc-500">Perfected high-heat, smoke-infused wok cooking for authentic Asian flavour.</p>
             </div>
             <div className="flex flex-col gap-2">
               <Award className="text-cinnabar" size={20} />
-              <h4 className="font-serif text-white text-sm uppercase tracking-wider font-bold">100% Raw</h4>
-              <p className="text-xs text-zinc-500">Fresh daily noodles, hand-stretched.</p>
+              <h4 className="font-serif text-white text-sm uppercase tracking-wider font-bold">100% Fresh</h4>
+              <p className="text-xs text-zinc-500">Handmade noodles, freshly prepared sauces — nothing pre-packaged.</p>
             </div>
             <div className="flex flex-col gap-2">
               <Heart className="text-cinnabar" size={20} />
               <h4 className="font-serif text-white text-sm uppercase tracking-wider font-bold">Local Soul</h4>
-              <p className="text-xs text-zinc-500">Custom tailored to our student and local community.</p>
+              <p className="text-xs text-zinc-500">Crafted for UPES students and the Bidholi, Dehradun community.</p>
             </div>
           </div>
         </div>
       </div>
 
       <div className="text-center text-zinc-600 font-sans text-xs tracking-widest uppercase flex justify-center items-center gap-1 mt-8">
-        <Sparkles size={12} className="text-secondary" /> Jade Dragon Wok Cafe • Dehradun
+        <Sparkles size={12} className="text-secondary" /> Jade Dragon Wok Cafe • Bidholi, Dehradun
       </div>
     </motion.div>
   );

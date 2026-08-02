@@ -22,6 +22,22 @@ export default function Contact() {
 
   const handleBookingSubmit = (e) => {
     e.preventDefault();
+
+    const bookingId = 'JDW-R' + Math.floor(1000 + Math.random() * 9000);
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+    const formattedTime = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+    const header = `⛩️ *JADE DRAGON WOK CAFE — TABLE RESERVATION*\n──────────────────────────────`;
+    const bookingMeta = `🆔 *Booking Ref:* #${bookingId}\n📅 *Requested on:* ${formattedDate}, ${formattedTime}`;
+    const reservationDetails = `🪑 *RESERVATION DETAILS*\n• *Preferred Date:* ${booking.date}\n• *Time Slot:* ${booking.time}\n• *Party Size:* ${booking.guests}`;
+    const footer = `🚀 *Sent via Jade Dragon Wok Website*\n_Please reply to confirm table availability._`;
+
+    const fullMessage = [header, bookingMeta, reservationDetails, footer].join('\n\n');
+    const encodedMessage = encodeURIComponent(fullMessage);
+    const whatsappUrl = `https://wa.me/919219603033?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+
     setBookingConfirmed(true);
     setTimeout(() => setBookingConfirmed(false), 4000);
   };
@@ -98,7 +114,7 @@ export default function Contact() {
       {/* Header */}
       <div className="flex flex-col gap-4">
         <span className="text-cinnabar font-serif tracking-[0.3em] text-xs uppercase block">GET IN TOUCH</span>
-        <h1 className="font-serif text-4xl sm:text-6xl font-bold uppercase tracking-wider">Contact & Inquiries</h1>
+        <h1 className="font-serif text-4xl sm:text-6xl font-bold uppercase tracking-wider">Contact Us — Jade Dragon Wok, Bidholi, Dehradun</h1>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mt-6">
@@ -108,7 +124,7 @@ export default function Contact() {
           <div>
             <h3 className="font-serif text-2xl font-bold text-white uppercase tracking-wider mb-3">Reach Out Directly</h3>
             <p className="text-zinc-400 font-sans text-xs sm:text-sm leading-relaxed">
-              Planning a group lunch, student party, catering order, or have questions about our ingredients? Send us a message or call our team in Bidholi.
+              Planning a student party near UPES, group dining in Bidholi, bulk catering for college events, or have questions about our menu and ingredients? Call us, send an inquiry, or book a table at Dehradun's favourite Asian restaurant.
             </p>
           </div>
 
@@ -286,7 +302,7 @@ export default function Contact() {
       </div>
 
       <div className="text-center text-zinc-600 font-sans text-xs tracking-widest uppercase flex justify-center items-center gap-1 mt-10">
-        <Sparkles size={12} className="text-secondary" /> Jade Dragon Wok Cafe • Bidholi
+        <Sparkles size={12} className="text-secondary" /> Jade Dragon Wok Cafe • Bidholi, Dehradun
       </div>
     </motion.div>
   );

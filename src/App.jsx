@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ShoppingBag, Plus, Minus, Trash2, Instagram, Facebook, MessageCircle } from 'lucide-react';
+import { Menu, X, ShoppingBag, Plus, Minus, Trash2, Instagram, Facebook, MessageCircle, Download, FileText } from 'lucide-react';
 import Home from './pages/Home';
 import About from './pages/About';
 import MenuPage from './pages/Menu';
@@ -9,6 +9,7 @@ import Gallery from './pages/Gallery';
 import LocationPage from './pages/Location';
 import Contact from './pages/Contact';
 import logoImg from './assets/logo.png';
+import { jsPDF } from 'jspdf';
 
 function AppContent() {
   const location = useLocation();
@@ -19,6 +20,10 @@ function AppContent() {
   // WhatsApp Cart State
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
+  
+  // Receipt Popup State
+  const [receiptPopup, setReceiptPopup] = useState(false);
+  const [lastOrderData, setLastOrderData] = useState(null);
   
   // Student Order Form Info
   const [studentInfo, setStudentInfo] = useState({
@@ -114,6 +119,27 @@ function AppContent() {
     // WhatsApp destination number set to +91 92196 03033
     const whatsappUrl = `https://wa.me/919219603033?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
+
+    // Save order data for receipt PDF
+    setLastOrderData({
+      orderId,
+      date: formattedDate,
+      time: formattedTime,
+      name: studentInfo.name.trim(),
+      location: studentInfo.location.trim(),
+      payment: studentInfo.payment,
+      notes: studentInfo.notes?.trim() || '',
+      items: cart.map(item => ({ name: item.name, qty: item.qty, price: item.numericPrice })),
+      total: cartTotal
+    });
+
+    // Close cart drawer and show receipt popup
+    setCartOpen(false);
+    setReceiptPopup(true);
+
+    // Clear cart after order
+    setCart([]);
+    setStudentInfo({ name: '', location: '', payment: 'UPI (GPay/PhonePe)', notes: '' });
   };
 
   return (
@@ -328,7 +354,7 @@ function AppContent() {
                 {/* Social media links row in drawer */}
                 <div className="flex justify-center items-center gap-4 text-zinc-500 pt-1">
                   <a 
-                    href="https://instagram.com/jadedragonwok" 
+                    href="https://www.instagram.com/jadedragonwok/" 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="hover:text-cinnabar transition-colors cursor-pointer" 
@@ -518,6 +544,164 @@ function AppContent() {
                 </form>
               </div>
 
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* RECEIPT DOWNLOAD POPUP */}
+      <AnimatePresence>
+        {receiptPopup && lastOrderData && (
+          <div className="fixed inset-0 z-[2000] flex items-center justify-center px-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.6 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setReceiptPopup(false)}
+              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="relative w-full max-w-sm bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 shadow-2xl z-[2010] font-sans"
+            >
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-[#25D366] rounded-t-3xl" />
+              
+              <div className="text-center mb-5">
+                <div className="w-14 h-14 rounded-full bg-[#25D366]/10 border border-[#25D366]/30 flex items-center justify-center text-[#25D366] mx-auto mb-4">
+                  <FileText size={24} />
+                </div>
+                <h3 className="font-serif text-lg font-bold text-white uppercase tracking-wider">Order Sent!</h3>
+                <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
+                  Your order <span className="text-white font-bold">#{lastOrderData.orderId}</span> has been sent to Jade Dragon Wok via WhatsApp. Download your receipt for your records.
+                </p>
+              </div>
+
+              <div className="bg-zinc-950/60 border border-zinc-800 rounded-xl p-4 mb-5 text-xs space-y-1.5">
+                <div className="flex justify-between text-zinc-400">
+                  <span>Order Ref</span>
+                  <span className="text-white font-bold">#{lastOrderData.orderId}</span>
+                </div>
+                <div className="flex justify-between text-zinc-400">
+                  <span>Items</span>
+                  <span className="text-white">{lastOrderData.items.reduce((a, i) => a + i.qty, 0)}</span>
+                </div>
+                <div className="flex justify-between text-zinc-400 border-t border-zinc-800 pt-1.5">
+                  <span className="font-bold">Total</span>
+                  <span className="text-white font-bold text-sm">₹{lastOrderData.total}</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => {
+                    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+                    const d = lastOrderData;
+                    let y = 20;
+
+                    // Header
+                    doc.setFontSize(18);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('JADE DRAGON WOK CAFE', 105, y, { align: 'center' });
+                    y += 7;
+                    doc.setFontSize(9);
+                    doc.setFont('helvetica', 'normal');
+                    doc.text('Bidholi Rd, Near UPES Campus, Dehradun, Uttarakhand 248007', 105, y, { align: 'center' });
+                    y += 5;
+                    doc.text('Phone: +91 92196 03033 | +91 92589 83691', 105, y, { align: 'center' });
+                    y += 8;
+
+                    // Divider
+                    doc.setDrawColor(200);
+                    doc.line(20, y, 190, y);
+                    y += 8;
+
+                    // Order meta
+                    doc.setFontSize(11);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('ORDER RECEIPT', 105, y, { align: 'center' });
+                    y += 8;
+                    doc.setFontSize(9);
+                    doc.setFont('helvetica', 'normal');
+                    doc.text(`Order Ref: #${d.orderId}`, 20, y);
+                    doc.text(`Date: ${d.date}, ${d.time}`, 190, y, { align: 'right' });
+                    y += 6;
+                    doc.text(`Customer: ${d.name}`, 20, y);
+                    y += 5;
+                    doc.text(`Delivery: ${d.location}`, 20, y);
+                    y += 5;
+                    doc.text(`Payment: ${d.payment}`, 20, y);
+                    y += 8;
+
+                    // Divider
+                    doc.line(20, y, 190, y);
+                    y += 6;
+
+                    // Items header
+                    doc.setFont('helvetica', 'bold');
+                    doc.setFontSize(9);
+                    doc.text('ITEM', 20, y);
+                    doc.text('QTY', 120, y, { align: 'center' });
+                    doc.text('PRICE', 155, y, { align: 'center' });
+                    doc.text('TOTAL', 190, y, { align: 'right' });
+                    y += 3;
+                    doc.line(20, y, 190, y);
+                    y += 5;
+
+                    // Items
+                    doc.setFont('helvetica', 'normal');
+                    d.items.forEach((item) => {
+                      const itemName = item.name.length > 35 ? item.name.substring(0, 35) + '...' : item.name;
+                      doc.text(itemName, 20, y);
+                      doc.text(String(item.qty), 120, y, { align: 'center' });
+                      doc.text(`\u20b9${item.price}`, 155, y, { align: 'center' });
+                      doc.text(`\u20b9${item.price * item.qty}`, 190, y, { align: 'right' });
+                      y += 6;
+                    });
+
+                    y += 2;
+                    doc.line(20, y, 190, y);
+                    y += 7;
+
+                    // Total
+                    doc.setFontSize(12);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text('TOTAL BILL:', 20, y);
+                    doc.text(`\u20b9${d.total}`, 190, y, { align: 'right' });
+                    y += 10;
+
+                    // Special instructions
+                    if (d.notes) {
+                      doc.setFontSize(9);
+                      doc.setFont('helvetica', 'italic');
+                      doc.text(`Special Instructions: "${d.notes}"`, 20, y);
+                      y += 8;
+                    }
+
+                    // Footer
+                    doc.setFontSize(8);
+                    doc.setFont('helvetica', 'normal');
+                    doc.setTextColor(130);
+                    doc.text('Thank you for ordering from Jade Dragon Wok!', 105, y + 5, { align: 'center' });
+                    doc.text('This receipt was generated automatically. For queries, call +91 92196 03033.', 105, y + 10, { align: 'center' });
+
+                    doc.save(`JDW-Receipt-${d.orderId}.pdf`);
+                  }}
+                  className="w-full bg-[#E34234] hover:bg-[#cf3527] text-white font-serif tracking-widest text-[10px] sm:text-xs uppercase py-3.5 rounded-xl shadow-lg flex items-center justify-center gap-2 border border-cinnabar/20 transition-all cursor-pointer"
+                >
+                  <Download size={14} /> Download Receipt (PDF)
+                </motion.button>
+                <button
+                  onClick={() => setReceiptPopup(false)}
+                  className="w-full text-zinc-400 hover:text-white font-serif tracking-widest text-[10px] uppercase py-2 transition-colors cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
             </motion.div>
           </div>
         )}

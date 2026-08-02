@@ -24,7 +24,7 @@ export default function Location() {
       {/* Header */}
       <div className="flex flex-col gap-3">
         <span className="text-cinnabar font-serif tracking-[0.3em] text-[10px] sm:text-xs uppercase block">VISIT OUR LOUNGE</span>
-        <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold uppercase tracking-wider">Our Location</h1>
+        <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold uppercase tracking-wider">Find Us — Near UPES, Bidholi, Dehradun</h1>
       </div>
 
       {/* Main Info Split Layout */}
@@ -35,7 +35,7 @@ export default function Location() {
           <div className="space-y-4">
             <h3 className="font-serif text-xl sm:text-2xl font-bold text-white uppercase tracking-wider">Bidholi Lounge</h3>
             <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed">
-              We are situated right next to the University of Petroleum and Energy Studies (UPES) in Bidholi, serving as the go-to spot for student cravings and fresh Asian cuisine in Dehradun.
+              Jade Dragon Wok is located on Bidholi Road, right next to the UPES (University of Petroleum and Energy Studies) campus in Dehradun. We are the nearest Asian restaurant to UPES and serve as the go-to spot for students, faculty, and locals craving authentic Chinese and Thai cuisine in Uttarakhand.
             </p>
           </div>
 
@@ -100,7 +100,7 @@ export default function Location() {
       </div>
 
       <div className="text-center text-zinc-600 font-sans text-xs tracking-widest uppercase flex justify-center items-center gap-1 mt-10">
-        <Sparkles size={12} className="text-secondary" /> Jade Dragon Wok Cafe • Bidholi
+        <Sparkles size={12} className="text-secondary" /> Jade Dragon Wok Cafe • Bidholi, Dehradun
       </div>
     </motion.div>
   );

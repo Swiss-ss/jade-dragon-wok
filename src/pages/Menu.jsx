@@ -264,7 +264,7 @@ export default function Menu({ cart, addToCart, updateQty }) {
       {/* Header title */}
       <div className="flex flex-col gap-3">
         <span className="text-cinnabar font-serif tracking-[0.3em] text-[10px] sm:text-xs uppercase block">THE FOOD CATALOGUE</span>
-        <h1 className="font-serif text-3xl sm:text-5xl font-bold uppercase tracking-wider">Our Menu</h1>
+        <h1 className="font-serif text-3xl sm:text-5xl font-bold uppercase tracking-wider">Our Menu — Chinese & Asian Dishes in Bidholi, Dehradun</h1>
       </div>
 
       {/* Category Selection Filter Navigation */}
@@ -379,14 +379,14 @@ export default function Menu({ cart, addToCart, updateQty }) {
         <div className="flex-1 text-center sm:text-left font-sans">
           <h4 className="text-white text-xs sm:text-sm font-bold uppercase tracking-wider">Lounge Free Delivery Policy</h4>
           <p className="text-[11px] sm:text-xs text-zinc-400 mt-1 leading-relaxed">
-            HOME DELIVERY IS COMPLETELY **FREE UPTO 5KMS** WITH A MINIMUM BASKET VALUE OF **RS. 399**. 
-            Standard rates apply for delivery zones beyond 5kms. Please confirm coordinates when sending order confirmation.
+            HOME DELIVERY IS COMPLETELY **FREE UPTO 5KMS** FROM OUR BIDHOLI LOCATION (COVERS UPES CAMPUS & NEARBY AREAS) WITH A MINIMUM BASKET VALUE OF **RS. 399**. 
+            Standard delivery rates apply for zones beyond 5 km in Dehradun. Please confirm your delivery address when sending order confirmation via WhatsApp.
           </p>
         </div>
       </div>
 
       <div className="text-center text-zinc-600 font-sans text-xs tracking-widest uppercase flex justify-center items-center gap-1 mt-10">
-        <Sparkles size={12} className="text-secondary" /> Jade Dragon Wok Cafe • Bidholi
+        <Sparkles size={12} className="text-secondary" /> Jade Dragon Wok Cafe • Bidholi, Dehradun
       </div>
     </motion.div>
   );

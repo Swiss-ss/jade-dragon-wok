@@ -7,47 +7,56 @@ const GALLERY_PHOTOS = [
   {
     title: 'The Sizzle',
     subtitle: 'Wok Heat',
-    img: 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=600&auto=format&fit=crop&q=80'
+    img: 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=600&auto=format&fit=crop&q=80',
+    alt: 'Wok-fired cooking at Jade Dragon Wok restaurant in Bidholi Dehradun'
   },
   {
     title: 'Warm Oak Counter',
     subtitle: 'Dining Vibe',
-    img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop&q=80'
+    img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop&q=80',
+    alt: 'Warm oak dining counter inside Jade Dragon Wok Asian cafe Bidholi'
   },
   {
     title: 'Fresh Preparation',
     subtitle: 'Daily Noodle Stretch',
-    img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=600&auto=format&fit=crop&q=80'
+    img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=600&auto=format&fit=crop&q=80',
+    alt: 'Fresh hand-pulled noodles being prepared at Jade Dragon Wok Dehradun'
   },
   {
     title: 'Red Lantern Glow',
     subtitle: 'Signature Atmosphere',
-    img: 'https://images.unsplash.com/photo-1526244437259-7f37eb13ea22?w=600&auto=format&fit=crop&q=80'
+    img: 'https://images.unsplash.com/photo-1526244437259-7f37eb13ea22?w=600&auto=format&fit=crop&q=80',
+    alt: 'Red lantern ambiance at Jade Dragon Wok Chinese restaurant near UPES'
   },
   {
     title: 'Handcrafted Dim Sum',
     subtitle: 'Crystal Veg Dim Sum',
-    img: 'https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?w=600&auto=format&fit=crop&q=80'
+    img: 'https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?w=600&auto=format&fit=crop&q=80',
+    alt: 'Handcrafted vegetable dim sum served at Jade Dragon Wok Bidholi Dehradun'
   },
   {
     title: 'Golden Pork Dumplings',
     subtitle: 'Dragon Dumplings',
-    img: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&auto=format&fit=crop&q=80'
+    img: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&auto=format&fit=crop&q=80',
+    alt: 'Golden fried dumplings at Jade Dragon Wok Asian restaurant Dehradun'
   },
   {
     title: 'Fiery Pan Toss',
     subtitle: 'Kung Pao Fire',
-    img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&auto=format&fit=crop&q=80'
+    img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&auto=format&fit=crop&q=80',
+    alt: 'Kung Pao chicken wok-tossed at Jade Dragon Wok cafe Bidholi'
   },
   {
     title: 'Herbal Infusions',
     subtitle: 'Thai Green Curry Prep',
-    img: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600&auto=format&fit=crop&q=80'
+    img: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600&auto=format&fit=crop&q=80',
+    alt: 'Thai green curry preparation at Jade Dragon Wok restaurant near UPES Dehradun'
   },
   {
-    title: 'Traditional Table setup',
+    title: 'Traditional Table Setup',
     subtitle: 'Minimalist Dining',
-    img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop&q=80'
+    img: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop&q=80',
+    alt: 'Minimalist dining setup at Jade Dragon Wok Bidholi Dehradun'
   }
 ];
 
@@ -73,7 +82,7 @@ export default function Gallery() {
       <div className="flex flex-col gap-4">
         <span className="text-cinnabar font-serif tracking-[0.3em] text-xs uppercase block">VISUAL MOMENTS</span>
         <h1 className="font-serif text-4xl sm:text-6xl font-bold uppercase tracking-wider flex items-center gap-3">
-          <Image size={32} className="text-cinnabar" /> Gallery Showcase
+          <Image size={32} className="text-cinnabar" /> Photo Gallery — Inside Jade Dragon Wok, Bidholi
         </h1>
       </div>
 
@@ -86,7 +95,7 @@ export default function Gallery() {
           >
             <img 
               src={photo.img} 
-              alt={photo.title} 
+              alt={photo.alt} 
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
             />
             {/* Title Overlay on Hover */}
@@ -99,7 +108,7 @@ export default function Gallery() {
       </div>
 
       <div className="text-center text-zinc-600 font-sans text-xs tracking-widest uppercase flex justify-center items-center gap-1 mt-10">
-        <Sparkles size={12} className="text-secondary" /> Jade Dragon Wok Cafe • Bidholi
+        <Sparkles size={12} className="text-secondary" /> Jade Dragon Wok Cafe • Bidholi, Dehradun
       </div>
     </motion.div>
   );

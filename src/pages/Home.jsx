@@ -13,6 +13,22 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
 
   const handleBookingSubmit = (e) => {
     e.preventDefault();
+
+    const bookingId = 'JDW-R' + Math.floor(1000 + Math.random() * 9000);
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+    const formattedTime = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+    const header = `⛩️ *JADE DRAGON WOK CAFE — TABLE RESERVATION*\n──────────────────────────────`;
+    const bookingMeta = `🆔 *Booking Ref:* #${bookingId}\n📅 *Requested on:* ${formattedDate}, ${formattedTime}`;
+    const reservationDetails = `🪑 *RESERVATION DETAILS*\n• *Preferred Date:* ${booking.date}\n• *Time Slot:* ${booking.time}\n• *Party Size:* ${booking.guests}`;
+    const footer = `🚀 *Sent via Jade Dragon Wok Website*\n_Please reply to confirm table availability._`;
+
+    const fullMessage = [header, bookingMeta, reservationDetails, footer].join('\n\n');
+    const encodedMessage = encodeURIComponent(fullMessage);
+    const whatsappUrl = `https://wa.me/919219603033?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+
     setBookingConfirmed(true);
     setTimeout(() => setBookingConfirmed(false), 4000);
   };
@@ -73,7 +89,7 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-cinnabar font-serif tracking-[0.35em] text-xs sm:text-sm uppercase block mb-4"
             >
-              AUTHENTIC ASIAN CAFE IN BIDHOLI
+              BEST CHINESE & ASIAN RESTAURANT IN BIDHOLI, DEHRADUN
             </motion.span>
             <motion.h1 
               initial={{ opacity: 0, y: 30 }}
@@ -82,7 +98,7 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
               className="font-serif text-5xl sm:text-7xl md:text-8xl font-bold tracking-tight text-white leading-tight uppercase"
             >
               Jade Dragon Wok<br />
-              <span className="italic font-normal text-zinc-300 normal-case">Fiery Wok, Local Soul.</span>
+              <span className="italic font-normal text-zinc-300 normal-case">Authentic Wok-Fired Flavours Near UPES Campus.</span>
             </motion.h1>
           </div>
 
@@ -118,7 +134,7 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
               Obsessive<br />Preparation.
             </h2>
             <p className="text-zinc-400 font-sans text-xs sm:text-sm leading-relaxed max-w-md mb-6">
-              Every batch of noodles is hand-pulled, tossed in fiery woks under signature red lanterns, and served fresh. Learn more about our philosophy and heritage.
+              Experience the best Asian cuisine in Bidholi. We serve hand-pulled noodles, spicy dim sum, and wok-tossed specialties crafted daily. Located just outside UPES, Jade Dragon Wok is the premier destination for authentic Chinese food lovers in Dehradun.
             </p>
             <Link 
               to="/about"
@@ -222,7 +238,7 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
               Step into the<br />atmosphere.
             </h2>
             <p className="text-zinc-300 font-sans text-xs sm:text-sm leading-relaxed max-w-sm mb-6">
-              Moody low-lighting, sizzle of wok fires, and industrial wooden counters capture the essence of Asian night markets in Bidholi.
+              Our restaurant offers a premium dining space near UPES. With a vibrant atmosphere inspired by Asian night markets, we provide the perfect setting for students and locals in Bidholi to enjoy high-quality Asian food in an immersive environment.
             </p>
             <Link 
               to="/location" 
@@ -244,7 +260,7 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
             <div className="text-center mb-6">
               <span className="text-cinnabar font-serif tracking-[0.3em] text-[10px] sm:text-xs uppercase block mb-2">RESERVE A SEAT</span>
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white uppercase tracking-wider">The Invite</h2>
-              <p className="text-xs text-zinc-400 font-sans mt-2">Secure your spot in the heart of Jade Dragon Wok dining lounge.</p>
+              <p className="text-xs text-zinc-400 font-sans mt-2">Book a table at Bidholi's favourite Chinese & Asian restaurant near UPES, Dehradun.</p>
             </div>
 
             <form onSubmit={handleBookingSubmit} className="space-y-4">
@@ -334,7 +350,7 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
           <div className="absolute bottom-8 flex flex-col items-center gap-3.5">
             <div className="flex items-center gap-5 text-zinc-500">
               <a 
-                href="https://instagram.com/jadedragonwok" 
+                href="https://www.instagram.com/jadedragonwok/" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="hover:text-cinnabar transition-colors cursor-pointer"
@@ -363,7 +379,7 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
             </div>
 
             <div className="text-center text-zinc-600 font-sans text-[10px] tracking-widest uppercase flex items-center gap-1">
-              <Sparkles size={10} className="text-zinc-600" /> Jade Dragon Wok Cafe • Bidholi
+              <Sparkles size={10} className="text-zinc-600" /> Jade Dragon Wok Cafe • Bidholi, Dehradun
             </div>
           </div>
         </section>
