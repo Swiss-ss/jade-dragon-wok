@@ -3,6 +3,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ChevronDown, Calendar, Clock, Users, Check, Sparkles, MapPin, Phone, ArrowRight, Instagram, Facebook, MessageCircle } from 'lucide-react';
 
+// Best-looking dish images for visual showcase moments
+import dishLotusStem from '../assets/Lotus Stem Honey Chilli.webp';
+import dishSatay from '../assets/Thai Chicken Satay with Peanut Sauce.webp';
+import dishCantonese from '../assets/Dragon Cantonese Spicy Noodles.webp';
+import dishKungPao from '../assets/Wok Tossed Kung Pad Chicken.webp';
+import dishPadThai from '../assets/Chicken Pad Thai Noodles.webp';
+import dishPrawns from '../assets/Butter Chilli Garlic Prawns In Sauce.webp';
+
 export default function Home({ scrollToSection, activeSection, onSectionChange, sectionRefs }) {
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [booking, setBooking] = useState({
@@ -122,7 +130,7 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
           className="h-screen w-full snap-start relative flex flex-col lg:flex-row bg-zinc-950"
         >
           <div className="h-[38vh] lg:h-full lg:w-1/2 relative overflow-hidden">
-            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1585032226651-759b368d7246?w=1200&auto=format&fit=crop&q=80')] bg-cover bg-center" />
+            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${dishLotusStem})` }} />
             <div className="absolute inset-0 bg-black/40 lg:bg-transparent" />
             <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-zinc-950 to-transparent lg:hidden" />
             <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-zinc-950 to-transparent hidden lg:block" />
@@ -171,12 +179,12 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
               
               <div className="min-w-[280px] sm:min-w-[320px] bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-4 flex flex-col justify-between h-[340px] snap-center">
                 <div className="h-40 w-full rounded-xl overflow-hidden relative">
-                  <img src="https://images.unsplash.com/photo-1585032226651-759b368d7246?w=500&auto=format&fit=crop&q=80" alt="Chili Garlic Noodles" className="w-full h-full object-cover" />
+                  <img src={dishCantonese} alt="Dragon Cantonese Spicy Noodles" className="w-full h-full object-cover" />
                   <span className="absolute top-3 left-3 bg-[#E34234] text-white text-[9px] font-sans tracking-widest uppercase font-semibold px-2 py-0.5 rounded">Spicy</span>
                 </div>
                 <div className="mt-4 flex-1 flex flex-col justify-between">
                   <div>
-                    <h4 className="font-serif text-lg font-bold text-white tracking-wide uppercase">Chili Garlic Noodles</h4>
+                    <h4 className="font-serif text-lg font-bold text-white tracking-wide uppercase">Dragon Cantonese Noodles</h4>
                     <p className="text-xs text-zinc-400 font-sans mt-1">Sautéed flat wheat noodles with bird's eye chili, sweet basil.</p>
                   </div>
                   <span className="font-serif text-base font-semibold text-zinc-300 mt-2">₹240</span>
@@ -185,26 +193,26 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
 
               <div className="min-w-[280px] sm:min-w-[320px] bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-4 flex flex-col justify-between h-[340px] snap-center">
                 <div className="h-40 w-full rounded-xl overflow-hidden relative">
-                  <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?w=500&auto=format&fit=crop&q=80" alt="Dragon Dumplings" className="w-full h-full object-cover" />
+                  <img src={dishSatay} alt="Thai Chicken Satay" className="w-full h-full object-cover" />
                   <span className="absolute top-3 left-3 bg-amber-600 text-white text-[9px] font-sans tracking-widest uppercase font-semibold px-2 py-0.5 rounded">Signature</span>
                 </div>
                 <div className="mt-4 flex-1 flex flex-col justify-between">
                   <div>
-                    <h4 className="font-serif text-lg font-bold text-white tracking-wide uppercase">Dragon Dumplings</h4>
-                    <p className="text-xs text-zinc-400 font-sans mt-1">Steamed parcels loaded with chicken, bathed in chili-oil.</p>
+                    <h4 className="font-serif text-lg font-bold text-white tracking-wide uppercase">Thai Chicken Satay</h4>
+                    <p className="text-xs text-zinc-400 font-sans mt-1">Grilled chicken skewers with coconut marinade and warm peanut sauce.</p>
                   </div>
-                  <span className="font-serif text-base font-semibold text-zinc-300 mt-2">₹180</span>
+                  <span className="font-serif text-base font-semibold text-zinc-300 mt-2">₹290</span>
                 </div>
               </div>
 
               <div className="min-w-[280px] sm:min-w-[320px] bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-4 flex flex-col justify-between h-[340px] snap-center">
                 <div className="h-40 w-full rounded-xl overflow-hidden relative">
-                  <img src="https://images.unsplash.com/photo-1525755662778-989d0524087e?w=500&auto=format&fit=crop&q=80" alt="Kung Pao Chicken" className="w-full h-full object-cover" />
+                  <img src={dishKungPao} alt="Wok Tossed Kung Pao Chicken" className="w-full h-full object-cover" />
                   <span className="absolute top-3 left-3 bg-[#E34234] text-white text-[9px] font-sans tracking-widest uppercase font-semibold px-2 py-0.5 rounded">Spicy</span>
                 </div>
                 <div className="mt-4 flex-1 flex flex-col justify-between">
                   <div>
-                    <h4 className="font-serif text-lg font-bold text-white tracking-wide uppercase">Kung Pao Chicken</h4>
+                    <h4 className="font-serif text-lg font-bold text-white tracking-wide uppercase">Wok Kung Pao Chicken</h4>
                     <p className="text-xs text-zinc-400 font-sans mt-1">Wok-fired chicken cubes tossed with dry red chilis and cashews.</p>
                   </div>
                   <span className="font-serif text-base font-semibold text-zinc-300 mt-2">₹280</span>
