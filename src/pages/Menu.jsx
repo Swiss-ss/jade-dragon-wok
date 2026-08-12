@@ -1,136 +1,228 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Sparkles, Filter, Plus, Minus, Truck } from 'lucide-react';
+
+// --- Soup image placeholders (Unsplash) ---
+const SOUP_IMGS = {
+  scallionsCorn:    'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&auto=format&fit=crop&q=80',
+  chickenCorn:      'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&auto=format&fit=crop&q=80',
+  vegManchow:       'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&auto=format&fit=crop&q=80',
+  chickenManchow:   'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&auto=format&fit=crop&q=80',
+  hotSourVeg:       'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&auto=format&fit=crop&q=80',
+  hotSourChicken:   'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&auto=format&fit=crop&q=80',
+  lemonCorVeg:      'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&auto=format&fit=crop&q=80',
+  lemonCorChicken:  'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&auto=format&fit=crop&q=80',
+  wontonNoodle:     'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=600&auto=format&fit=crop&q=80',
+  chickenWonton:    'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=600&auto=format&fit=crop&q=80',
+  tofuVeg:          'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&auto=format&fit=crop&q=80',
+  tomYumVeg:        'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600&auto=format&fit=crop&q=80',
+  tomYumPrawn:      'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=600&auto=format&fit=crop&q=80',
+  lungFung:         'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&auto=format&fit=crop&q=80',
+};
+
+// --- Starters ---
+import imgVegSpringRolls from '../assets/veg spring rolls.webp';
+import imgCrispyPotato from '../assets/crispy-honey-chilli-potatoes.webp';
+import imgChilliPaneer from '../assets/chilli-paneer recipe.webp';
+import imgPeriPeriFries from '../assets/Peri Peri Spicey French Fries.webp';
+import imgCrispyVeg from "../assets/Crispy Vegetables- Salt n' Pepper.webp";
+import imgChilliMushroom from '../assets/Crispy Fried Chilli Mushroom.webp';
+import imgBabyCorn from '../assets/Crispy Fried Baby Corn Schezwan Chilli.webp';
+import imgVegManchurian from '../assets/Vegetable Manchurian Dry.webp';
+import imgLotusStem from '../assets/Lotus Stem Honey Chilli.webp';
+import imgCrispyCornBhel from '../assets/Dragon Crispy Corn Bhel.webp';
+import imgVegDimsums from '../assets/Veg Dimsums With Singaporian Chilli Sauce (6pcs).webp';
+import imgPaneerDimsums from '../assets/Paneer Dimsums.webp';
+import imgChickenSpringRoll from '../assets/Dragon Chicken Glass Noodle Spring Roll.webp';
+import imgCrispyFish from '../assets/Crispy Fried Fish Chilli Garlic Sauce.webp';
+import imgChilliChicken from '../assets/Chilli Chicken - Dry.webp';
+import imgDrumsOfHeaven from '../assets/Drums Of Heaven Chicken Lollipop.webp';
+import imgHoneyChilliChicken from '../assets/Crispy Fried Honey Chilli Seasame Chicken.webp';
+import imgChickenSatay from '../assets/Thai Chicken Satay with Peanut Sauce.webp';
+import imgGoldenPrawns from '../assets/Golden Fried Prawns with Hot Garlic Dip (6pcs).webp';
+import imgThaiPrawnRolls from '../assets/Thai Prawns Spring Rolls (6pcs).webp';
+import imgWokPrawns from '../assets/Jade Dragon Wok Prawns Choice of Sauce.webp';
+import imgKungPaoChicken from '../assets/Wok Tossed Kung Pad Chicken.webp';
+import imgShreddedChicken from '../assets/Shredded Crispy Chicken Chilli Garlic.webp';
+
+// --- Asian Noodles ---
+import imgSingaporeNoodlesVeg from '../assets/Rice Vermicelli Singaporian Noodles.webp';
+import imgPadThaiVeg from '../assets/Pad Thai Noodles.webp';
+import imgHakkaNoodlesVeg from '../assets/Hakka Noodles.webp';
+import imgSchezwanNoodlesVeg from '../assets/Schezwan Chilli Noodles.webp';
+import imgChilliGarlicNoodlesVeg from '../assets/Chilli Garlic Noodles.webp';
+import imgCantoneseNoodlesVeg from '../assets/Dragon Cantonese Spicy Noodles.webp';
+import imgPanFriedNoodlesVeg from '../assets/Pan Fried Noodle With Vegetables.webp';
+import imgSingaporeNoodlesChicken from '../assets/Rice Vermicelli Singaporian Noodles Chicken.webp';
+import imgPadThaiChicken from '../assets/Chicken Pad Thai Noodles.webp';
+import imgEggHakkaNoodles from '../assets/Egg Hakka Noodles.webp';
+import imgSchezwanNoodlesChicken from '../assets/Chicken Shcezwan Chilli Noodles.webp';
+import imgChilliGarlicNoodlesChicken from '../assets/Chicken Chilli Garlic Noodles.webp';
+import imgPanFriedNoodlesChicken from '../assets/Pan Fried Noodles With Chicken.webp';
+
+// --- Fried Rice ---
+import imgVegFriedRice from '../assets/Veg Fried Rice.webp';
+import imgBurntGarlicRiceVeg from '../assets/Burnt Garlic Fried Rice.webp';
+import imgVegChilliGarlicRice from '../assets/Veg Chilli Garlic Fried Rice.webp';
+import imgSchezwanRiceVeg from '../assets/Schezwan Fried Rice.webp';
+import imgGingerRice from '../assets/Ginger Fried Rice.webp';
+import imgChickenFriedRice from '../assets/Chicken Fried Rice.webp';
+import imgBurntGarlicRiceChicken from '../assets/Burnt Garlic Fried Rice Chicken.webp';
+import imgEggFriedRice from '../assets/Egg Fried Rice.webp';
+import imgSchezwanRiceChicken from '../assets/Chicken Schezwan Fried Rice.webp';
+import imgChilliGarlicRiceChicken from '../assets/Chicken Chilli Garlic Fried Rice.webp';
+import imgYangzhouRice from '../assets/Yangzhou Fried Rice- Seafood Chicken.webp';
+import imgThaiRiceChicken from '../assets/Thai Fried Rice Chicken.webp';
+import imgPrawnFriedRice from '../assets/Prawn Fried Rice.webp';
+
+// --- Main Course ---
+import imgStirFriedGreens from '../assets/Stir Fried Chinese Greens.webp';
+import imgExoticVeg from '../assets/Exotic Vegetables Choice Of Sauce.webp';
+import imgSweetSourVeg from "../assets/Sweet N' Sour Vegetables.webp";
+import imgVegChopsuey from '../assets/Veg American Chopsuey.webp';
+import imgVegThaiCurry from '../assets/Veg Thai Green- Red Curry Served With Steamed Rice.webp';
+import imgJadeDragonThaiCurry from '../assets/Jade Dragon Wok Thai Curry Red-Green.webp';
+import imgSweetSourChicken from "../assets/Sweet N' Sour Chicken.webp";
+import imgSlicedFish from '../assets/Sliced Fish Choice Of Sauce.webp';
+import imgChickenThaiCurry from '../assets/Chicken Thai Curry Red-Green.webp';
+import imgButterPrawns from '../assets/Butter Chilli Garlic Prawns In Sauce.webp';
+import imgPrawnsChilliSambal from '../assets/Prawns Chilli Sambal Sauce.webp';
+
+// --- Desserts ---
+import imgDarsaan from '../assets/Darsaan.webp';
+import imgDatePancakes from '../assets/Date Pancakes.webp';
+import imgBananaPancakes from '../assets/Banana Pancakes.webp';
+import imgChocolateRoll from '../assets/Dragon Chocolate Roll.webp';
 
 const MENU_CATEGORIES = ['Soups', 'Starters', 'Asian Noodles', 'Fried Rice', 'Main Course', 'Desserts'];
 
 const MENU_DATA = {
   'Soups': {
     veg: [
-      { name: "Jade Scallions Corn Soup", price: "₹130", desc: "Creamy sweet corn soup infused with fresh jade scallions and herbs." },
-      { name: "Manchow Soup", price: "₹120", desc: "Classic hot and spicy soup served with crispy fried noodles." },
-      { name: "Hot N' Sour Soup", price: "₹120", desc: "A tangy, fiery broth loaded with shredded bamboo shoots, tofu, and mushrooms." },
-      { name: "Lemon Coriander Soup", price: "₹120", desc: "A refreshing clear broth flavored with fresh lemon juice and fresh coriander." },
-      { name: "Dragon Wonton Rice Noodle Soup", price: "₹130", desc: "Authentic broth with steamed vegetable wontons and thin rice noodles." },
-      { name: "Wok Tofu Asian Veg Clear Soup", price: "₹120", desc: "Light vegetable broth featuring wok-seared tofu cubes and seasonal greens." },
-      { name: "Tom Yum Soup", price: "₹120", desc: "Thai lemongrass broth with hot chilis, mushrooms, and fresh lime leaf." }
+      { name: "Jade Scallions Corn Soup", price: "₹130", desc: "Creamy sweet corn soup infused with fresh jade scallions and herbs.", img: SOUP_IMGS.scallionsCorn },
+      { name: "Manchow Soup", price: "₹120", desc: "Classic hot and spicy soup served with crispy fried noodles.", img: SOUP_IMGS.vegManchow },
+      { name: "Hot N' Sour Soup", price: "₹120", desc: "A tangy, fiery broth loaded with shredded bamboo shoots, tofu, and mushrooms.", img: SOUP_IMGS.hotSourVeg },
+      { name: "Lemon Coriander Soup", price: "₹120", desc: "A refreshing clear broth flavored with fresh lemon juice and fresh coriander.", img: SOUP_IMGS.lemonCorVeg },
+      { name: "Dragon Wonton Rice Noodle Soup", price: "₹130", desc: "Authentic broth with steamed vegetable wontons and thin rice noodles.", img: SOUP_IMGS.wontonNoodle },
+      { name: "Wok Tofu Asian Veg Clear Soup", price: "₹120", desc: "Light vegetable broth featuring wok-seared tofu cubes and seasonal greens.", img: SOUP_IMGS.tofuVeg },
+      { name: "Tom Yum Soup", price: "₹120", desc: "Thai lemongrass broth with hot chilis, mushrooms, and fresh lime leaf.", img: SOUP_IMGS.tomYumVeg }
     ],
     nonVeg: [
-      { name: "Jade Scallions Chicken Corn Soup", price: "₹160", desc: "Jade corn soup base with tender shredded chicken." },
-      { name: "Manchow Chicken Soup", price: "₹160", desc: "Spicy chicken broth loaded with veggies and topped with crispy noodles." },
-      { name: "Hot N' Sour Chicken Soup", price: "₹160", desc: "Tangy and hot chicken broth with egg drop ribbons." },
-      { name: "Lemon Coriander Chicken Soup", price: "₹160", desc: "Clear chicken soup with coriander leaf and fresh lime juice." },
-      { name: "Dragon Chicken Wonton Rice Noodle Soup", price: "₹170", desc: "Rice noodles and soft chicken wontons in hot seasoned broth." },
-      { name: "Chicken Lung Fung Soup", price: "₹160", desc: "Traditional thick chicken soup with egg shreds and mushrooms." },
-      { name: "Tom Yum Chicken Soup", price: "₹160", desc: "Spicy Thai lemongrass soup with tender chicken chunks." },
-      { name: "Tom Yum Prawn Soup", price: "₹180", desc: "Fragrant Thai hot and sour soup loaded with fresh prawns." },
-      { name: "Jade Dragon Wok Sea Food Soup", price: "₹190", desc: "Our chef's signature seafood broth with prawns, fish, and crab meat." }
+      { name: "Jade Scallions Chicken Corn Soup", price: "₹160", desc: "Jade corn soup base with tender shredded chicken.", img: SOUP_IMGS.chickenCorn },
+      { name: "Manchow Chicken Soup", price: "₹160", desc: "Spicy chicken broth loaded with veggies and topped with crispy noodles.", img: SOUP_IMGS.chickenManchow },
+      { name: "Hot N' Sour Chicken Soup", price: "₹160", desc: "Tangy and hot chicken broth with egg drop ribbons.", img: SOUP_IMGS.hotSourChicken },
+      { name: "Lemon Coriander Chicken Soup", price: "₹160", desc: "Clear chicken soup with coriander leaf and fresh lime juice.", img: SOUP_IMGS.lemonCorChicken },
+      { name: "Dragon Chicken Wonton Rice Noodle Soup", price: "₹170", desc: "Rice noodles and soft chicken wontons in hot seasoned broth.", img: SOUP_IMGS.chickenWonton },
+      { name: "Chicken Lung Fung Soup", price: "₹160", desc: "Traditional thick chicken soup with egg shreds and mushrooms.", img: SOUP_IMGS.lungFung },
+      { name: "Tom Yum Chicken Soup", price: "₹160", desc: "Spicy Thai lemongrass soup with tender chicken chunks.", img: SOUP_IMGS.tomYumVeg },
+      { name: "Tom Yum Prawn Soup", price: "₹180", desc: "Fragrant Thai hot and sour soup loaded with fresh prawns.", img: SOUP_IMGS.tomYumPrawn },
+      { name: "Jade Dragon Wok Sea Food Soup", price: "₹190", desc: "Our chef's signature seafood broth with prawns, fish, and crab meat.", img: SOUP_IMGS.tomYumPrawn }
     ]
   },
   'Starters': {
     veg: [
-      { name: "Veg Spring Rolls", price: "₹160", desc: "Crispy rolls filled with seasoned sautéed glass noodles and vegetables." },
-      { name: "Crispy Potato - Chilli / Honey Chilli", price: "₹170", desc: "Crisp potato fingers tossed in choice of spicy dry red chili or sweet honey chili glaze." },
-      { name: "Chilli Paneer - Dry / Sauce", price: "₹180", desc: "Fresh cottage cheese blocks tossed with capsicum, onions, and spicy soy-chili sauce." },
-      { name: "Peri Peri Spicy French Fries", price: "₹190", desc: "Thick cut golden fries dusted with hot Peri Peri seasoning powder." },
-      { name: "Crispy Vegetables - Salt n' Pepper / Honey Chilli", price: "₹160", desc: "Assorted vegetables batter-fried and tossed in salt-pepper or sweet honey glaze." },
-      { name: "Crispy Fried Chilli Mushroom / Honey Chilli Sesame", price: "₹190", desc: "Fresh button mushrooms tossed in spicy soy-chili or honey sesame glaze." },
-      { name: "Crispy Fried Baby Corn Schezwan Chilli", price: "₹190", desc: "Crunchy baby corn tossed with hot garlic and red Schezwan chilis." },
-      { name: "Vegetable Manchurian Dry / Sauce", price: "₹180", desc: "Seasoned vegetable dumplings tossed in a tangy soy-garlic Manchurian sauce." },
-      { name: "Lotus Stem Honey Chilli", price: "₹180", desc: "Crispy lotus root slices glazed with honey, red chilis, and toasted sesame." },
-      { name: "Dragon Crispy Corn Bhel", price: "₹170", desc: "Fritter-fried sweet corn kernels tossed with chopped onion, green chilis, and spices." },
-      { name: "Jade Chinese Bhel", price: "₹140", desc: "Crispy noodles tossed with shredded raw cabbage, green onions, and sweet-spicy sauce." },
-      { name: "Veg Dimsums With Singaporean Chilli Sauce (6pcs)", price: "₹190", desc: "Hand-rolled vegetable dimsums served with Singaporean sweet-spicy dip." },
-      { name: "Paneer Dimsums", price: "₹210", desc: "Soft cottage cheese and green herb filling, steamed to perfection (6pcs)." },
-      { name: "Pahadi Ragi Dimsums", price: "₹200", desc: "Healthy Himalayan finger millet dough wraps stuffed with mixed local vegetables." },
-      { name: "Dragon Special Transparent Dimsums", price: "₹250", desc: "Thin crystal potato-starch wrappers with an upscale, seasoned vegetable filling." }
+      { name: "Veg Spring Rolls", price: "₹160", desc: "Crispy rolls filled with seasoned sautéed glass noodles and vegetables.", img: imgVegSpringRolls },
+      { name: "Crispy Potato - Chilli / Honey Chilli", price: "₹170", desc: "Crisp potato fingers tossed in choice of spicy dry red chili or sweet honey chili glaze.", img: imgCrispyPotato },
+      { name: "Chilli Paneer - Dry / Sauce", price: "₹180", desc: "Fresh cottage cheese blocks tossed with capsicum, onions, and spicy soy-chili sauce.", img: imgChilliPaneer },
+      { name: "Peri Peri Spicy French Fries", price: "₹190", desc: "Thick cut golden fries dusted with hot Peri Peri seasoning powder.", img: imgPeriPeriFries },
+      { name: "Crispy Vegetables - Salt n' Pepper / Honey Chilli", price: "₹160", desc: "Assorted vegetables batter-fried and tossed in salt-pepper or sweet honey glaze.", img: imgCrispyVeg },
+      { name: "Crispy Fried Chilli Mushroom / Honey Chilli Sesame", price: "₹190", desc: "Fresh button mushrooms tossed in spicy soy-chili or honey sesame glaze.", img: imgChilliMushroom },
+      { name: "Crispy Fried Baby Corn Schezwan Chilli", price: "₹190", desc: "Crunchy baby corn tossed with hot garlic and red Schezwan chilis.", img: imgBabyCorn },
+      { name: "Vegetable Manchurian Dry / Sauce", price: "₹180", desc: "Seasoned vegetable dumplings tossed in a tangy soy-garlic Manchurian sauce.", img: imgVegManchurian },
+      { name: "Lotus Stem Honey Chilli", price: "₹180", desc: "Crispy lotus root slices glazed with honey, red chilis, and toasted sesame.", img: imgLotusStem },
+      { name: "Dragon Crispy Corn Bhel", price: "₹170", desc: "Fritter-fried sweet corn kernels tossed with chopped onion, green chilis, and spices.", img: imgCrispyCornBhel },
+      { name: "Jade Chinese Bhel", price: "₹140", desc: "Crispy noodles tossed with shredded raw cabbage, green onions, and sweet-spicy sauce.", img: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=600&auto=format&fit=crop&q=80' },
+      { name: "Veg Dimsums With Singaporean Chilli Sauce (6pcs)", price: "₹190", desc: "Hand-rolled vegetable dimsums served with Singaporean sweet-spicy dip.", img: imgVegDimsums },
+      { name: "Paneer Dimsums", price: "₹210", desc: "Soft cottage cheese and green herb filling, steamed to perfection (6pcs).", img: imgPaneerDimsums },
+      { name: "Pahadi Ragi Dimsums", price: "₹200", desc: "Healthy Himalayan finger millet dough wraps stuffed with mixed local vegetables.", img: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&auto=format&fit=crop&q=80' },
+      { name: "Dragon Special Transparent Dimsums", price: "₹250", desc: "Thin crystal potato-starch wrappers with an upscale, seasoned vegetable filling.", img: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&auto=format&fit=crop&q=80' }
     ],
     nonVeg: [
-      { name: "Dragon Chicken Glass Noodle Spring Roll", price: "₹200", desc: "Crispy wrapper filled with minced chicken, clear noodles, and mushrooms." },
-      { name: "Crispy Fried Fish Chilli Garlic Sauce", price: "₹320", desc: "Tender fish fillets battered, fried, and tossed in thick chili-garlic glaze." },
-      { name: "Chilli Chicken - Dry / Sauce", price: "₹280", desc: "Wok-tossed boneless chicken pieces with green peppers, chilis, and dark soy." },
-      { name: "Drums Of Heaven Chicken Lollipop", price: "₹260", desc: "Deep-fried chicken drumettes glazed in a sweet-spicy ginger garlic sauce." },
-      { name: "Crispy Fried Honey Chilli Sesame Chicken", price: "₹260", desc: "Crisp chicken strips tossed in sweet honey, hot chilis, and sesame." },
-      { name: "Thai Chicken Satay with Peanut Sauce", price: "₹290", desc: "Grilled chicken skewers marinated in coconut-turmeric milk, served with warm peanut sauce." },
-      { name: "Golden Fried Prawns with Hot Garlic Dip (6pcs)", price: "₹640", desc: "Jumbo prawns crisped golden and served with a robust chili-garlic dipping sauce." },
-      { name: "Thai Prawns Spring Rolls (6pcs)", price: "₹640", desc: "Thai herb marinated prawns wrapped in spring roll sheets and fried." },
-      { name: "Jade Dragon Wok Prawns Choice of Sauce", price: "₹640", desc: "Fresh prawns tossed in your choice of Schezwan, Hot Garlic, or Black Bean sauce." },
-      { name: "Wok Tossed Kung Pao Chicken", price: "₹310", desc: "Classic stir-fry with diced chicken, dry red chilis, peppers, and peanuts." },
-      { name: "Shredded Crispy Chicken Chilli Garlic", price: "₹250", desc: "Fine strips of crispy chicken tossed with minced garlic and green chilis." },
-      { name: "Chicken Dimsums With Singaporean Chilli Sauce (6pcs)", price: "₹250", desc: "Steamed chicken dumplings served alongside hot Singaporean chili dip." },
-      { name: "Pahadi Ragi Dimsums Chicken", price: "₹250", desc: "Nutritious Himalayan ragi flour dumplings loaded with juicy chicken." },
-      { name: "Dragon Special Transparent Dimsums Chicken", price: "₹320", desc: "Signature crystal dumplings filled with seasoned chicken breast chunks (6pcs)." }
+      { name: "Dragon Chicken Glass Noodle Spring Roll", price: "₹200", desc: "Crispy wrapper filled with minced chicken, clear noodles, and mushrooms.", img: imgChickenSpringRoll },
+      { name: "Crispy Fried Fish Chilli Garlic Sauce", price: "₹320", desc: "Tender fish fillets battered, fried, and tossed in thick chili-garlic glaze.", img: imgCrispyFish },
+      { name: "Chilli Chicken - Dry / Sauce", price: "₹280", desc: "Wok-tossed boneless chicken pieces with green peppers, chilis, and dark soy.", img: imgChilliChicken },
+      { name: "Drums Of Heaven Chicken Lollipop", price: "₹260", desc: "Deep-fried chicken drumettes glazed in a sweet-spicy ginger garlic sauce.", img: imgDrumsOfHeaven },
+      { name: "Crispy Fried Honey Chilli Sesame Chicken", price: "₹260", desc: "Crisp chicken strips tossed in sweet honey, hot chilis, and sesame.", img: imgHoneyChilliChicken },
+      { name: "Thai Chicken Satay with Peanut Sauce", price: "₹290", desc: "Grilled chicken skewers marinated in coconut-turmeric milk, served with warm peanut sauce.", img: imgChickenSatay },
+      { name: "Golden Fried Prawns with Hot Garlic Dip (6pcs)", price: "₹640", desc: "Jumbo prawns crisped golden and served with a robust chili-garlic dipping sauce.", img: imgGoldenPrawns },
+      { name: "Thai Prawns Spring Rolls (6pcs)", price: "₹640", desc: "Thai herb marinated prawns wrapped in spring roll sheets and fried.", img: imgThaiPrawnRolls },
+      { name: "Jade Dragon Wok Prawns Choice of Sauce", price: "₹640", desc: "Fresh prawns tossed in your choice of Schezwan, Hot Garlic, or Black Bean sauce.", img: imgWokPrawns },
+      { name: "Wok Tossed Kung Pao Chicken", price: "₹310", desc: "Classic stir-fry with diced chicken, dry red chilis, peppers, and peanuts.", img: imgKungPaoChicken },
+      { name: "Shredded Crispy Chicken Chilli Garlic", price: "₹250", desc: "Fine strips of crispy chicken tossed with minced garlic and green chilis.", img: imgShreddedChicken },
+      { name: "Chicken Dimsums With Singaporean Chilli Sauce (6pcs)", price: "₹250", desc: "Steamed chicken dumplings served alongside hot Singaporean chili dip.", img: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&auto=format&fit=crop&q=80' },
+      { name: "Pahadi Ragi Dimsums Chicken", price: "₹250", desc: "Nutritious Himalayan ragi flour dumplings loaded with juicy chicken.", img: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&auto=format&fit=crop&q=80' },
+      { name: "Dragon Special Transparent Dimsums Chicken", price: "₹320", desc: "Signature crystal dumplings filled with seasoned chicken breast chunks (6pcs).", img: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&auto=format&fit=crop&q=80' }
     ]
   },
   'Asian Noodles': {
     veg: [
-      { name: "Rice Vermicelli Singaporean Noodles", price: "₹200", desc: "Thin rice vermicelli stir-fried with vegetables and yellow curry powder." },
-      { name: "Pad Thai Noodles", price: "₹220", desc: "Flat rice noodles tossed with bean sprouts, peanuts, tofu, and tamarind glaze." },
-      { name: "Hakka Noodles", price: "₹150", desc: "Classic Indo-Chinese stir-fried wheat noodles with cabbage and carrots." },
-      { name: "Schezwan Chilli Noodles", price: "₹150", desc: "Wheat noodles tossed in hot, red Schezwan chili paste and garlic." },
-      { name: "Chilli Garlic Noodles", price: "₹150", desc: "Spicy noodles loaded with fried golden garlic flakes and fresh chilis." },
-      { name: "Dragon Cantonese Spicy Noodles", price: "₹170", desc: "Stir-fried noodles with a spicy, thick gravy glaze and mixed greens." },
-      { name: "Pan Fried Noodle With Vegetables", price: "₹220", desc: "Crisp-fried noodle base topped with a savory clear sauce loaded with vegetables." }
+      { name: "Rice Vermicelli Singaporean Noodles", price: "₹200", desc: "Thin rice vermicelli stir-fried with vegetables and yellow curry powder.", img: imgSingaporeNoodlesVeg },
+      { name: "Pad Thai Noodles", price: "₹220", desc: "Flat rice noodles tossed with bean sprouts, peanuts, tofu, and tamarind glaze.", img: imgPadThaiVeg },
+      { name: "Hakka Noodles", price: "₹150", desc: "Classic Indo-Chinese stir-fried wheat noodles with cabbage and carrots.", img: imgHakkaNoodlesVeg },
+      { name: "Schezwan Chilli Noodles", price: "₹150", desc: "Wheat noodles tossed in hot, red Schezwan chili paste and garlic.", img: imgSchezwanNoodlesVeg },
+      { name: "Chilli Garlic Noodles", price: "₹150", desc: "Spicy noodles loaded with fried golden garlic flakes and fresh chilis.", img: imgChilliGarlicNoodlesVeg },
+      { name: "Dragon Cantonese Spicy Noodles", price: "₹170", desc: "Stir-fried noodles with a spicy, thick gravy glaze and mixed greens.", img: imgCantoneseNoodlesVeg },
+      { name: "Pan Fried Noodle With Vegetables", price: "₹220", desc: "Crisp-fried noodle base topped with a savory clear sauce loaded with vegetables.", img: imgPanFriedNoodlesVeg }
     ],
     nonVeg: [
-      { name: "Rice Vermicelli Singaporean Noodles Chicken", price: "₹250", desc: "Thin rice noodles stir-fried with chicken, egg, and mild curry powder." },
-      { name: "Chicken Pad Thai Noodles", price: "₹270", desc: "Thai street style flat rice noodles with egg, chicken, peanuts, and lime." },
-      { name: "Chicken / Egg Hakka Noodles", price: "₹190", desc: "Stir-fried wheat noodles tossed with shredded chicken, scrambled egg, and scallions." },
-      { name: "Chicken Schezwan Chilli Noodles", price: "₹190", desc: "Noodles tossed in a fiery, hot Schezwan sauce with chicken chunks." },
-      { name: "Chicken Chilli Garlic Noodles", price: "₹190", desc: "Wheat noodles stir-fried with garlic, red chilis, and seasoned chicken." },
-      { name: "Dragon Cantonese Spicy Noodles Chicken", price: "₹220", desc: "Cantonese style wok-fried noodles tossed in rich soy sauce with chicken." },
-      { name: "Pan Fried Noodles With Chicken", price: "₹270", desc: "Crispy noodles topped with chicken breast strips in a savory, thick brown sauce." }
+      { name: "Rice Vermicelli Singaporean Noodles Chicken", price: "₹250", desc: "Thin rice noodles stir-fried with chicken, egg, and mild curry powder.", img: imgSingaporeNoodlesChicken },
+      { name: "Chicken Pad Thai Noodles", price: "₹270", desc: "Thai street style flat rice noodles with egg, chicken, peanuts, and lime.", img: imgPadThaiChicken },
+      { name: "Chicken / Egg Hakka Noodles", price: "₹190", desc: "Stir-fried wheat noodles tossed with shredded chicken, scrambled egg, and scallions.", img: imgEggHakkaNoodles },
+      { name: "Chicken Schezwan Chilli Noodles", price: "₹190", desc: "Noodles tossed in a fiery, hot Schezwan sauce with chicken chunks.", img: imgSchezwanNoodlesChicken },
+      { name: "Chicken Chilli Garlic Noodles", price: "₹190", desc: "Wheat noodles stir-fried with garlic, red chilis, and seasoned chicken.", img: imgChilliGarlicNoodlesChicken },
+      { name: "Dragon Cantonese Spicy Noodles Chicken", price: "₹220", desc: "Cantonese style wok-fried noodles tossed in rich soy sauce with chicken.", img: imgCantoneseNoodlesVeg },
+      { name: "Pan Fried Noodles With Chicken", price: "₹270", desc: "Crispy noodles topped with chicken breast strips in a savory, thick brown sauce.", img: imgPanFriedNoodlesChicken }
     ]
   },
   'Fried Rice': {
     veg: [
-      { name: "Veg Fried Rice", price: "₹150", desc: "Wok-tossed basmati rice with finely chopped carrots, beans, and spring onion." },
-      { name: "Burnt Garlic Fried Rice", price: "₹150", desc: "Fluffy rice loaded with aromatic golden-browned garlic bits and green herbs." },
-      { name: "Veg Chilli Garlic Fried Rice", price: "₹150", desc: "Basmati rice wok-tossed with red chilis and fresh garlic flakes." },
-      { name: "Schezwan Fried Rice", price: "₹150", desc: "Rice tossed in hot and spicy house-made red Schezwan chili paste." },
-      { name: "Ginger Fried Rice", price: "₹150", desc: "Basmati rice seasoned with fine ginger juliennes and mild herbs." },
-      { name: "Jade Dragon Wok Fried Rice", price: "₹190", desc: "Chef's signature fried rice with exotic veggies and special house sauce." }
+      { name: "Veg Fried Rice", price: "₹150", desc: "Wok-tossed basmati rice with finely chopped carrots, beans, and spring onion.", img: imgVegFriedRice },
+      { name: "Burnt Garlic Fried Rice", price: "₹150", desc: "Fluffy rice loaded with aromatic golden-browned garlic bits and green herbs.", img: imgBurntGarlicRiceVeg },
+      { name: "Veg Chilli Garlic Fried Rice", price: "₹150", desc: "Basmati rice wok-tossed with red chilis and fresh garlic flakes.", img: imgVegChilliGarlicRice },
+      { name: "Schezwan Fried Rice", price: "₹150", desc: "Rice tossed in hot and spicy house-made red Schezwan chili paste.", img: imgSchezwanRiceVeg },
+      { name: "Ginger Fried Rice", price: "₹150", desc: "Basmati rice seasoned with fine ginger juliennes and mild herbs.", img: imgGingerRice },
+      { name: "Jade Dragon Wok Fried Rice", price: "₹190", desc: "Chef's signature fried rice with exotic veggies and special house sauce.", img: 'https://images.unsplash.com/photo-1603133872878-685f588c2a3d?w=600&auto=format&fit=crop&q=80' }
     ],
     nonVeg: [
-      { name: "Chicken Fried Rice", price: "₹200", desc: "Classic fried rice tossed with egg scramble and seasoned chicken cubes." },
-      { name: "Burnt Garlic Fried Rice Chicken", price: "₹200", desc: "Fragrant fried rice tossed with chicken and heavy burnt garlic flavor." },
-      { name: "Egg Fried Rice", price: "₹180", desc: "Wok-tossed rice with scrambled eggs, white pepper, and green onions." },
-      { name: "Chicken Schezwan Fried Rice", price: "₹200", desc: "Fiery red fried rice tossed with chicken chunks and Schezwan chili paste." },
-      { name: "Chicken Chilli Garlic Fried Rice", price: "₹200", desc: "Fried rice seasoned with red chilis, lots of garlic, and chicken." },
-      { name: "Yangzhou Fried Rice - Seafood Chicken", price: "₹230", desc: "Traditional Chinese style rice tossed with prawns, chicken, and egg." },
-      { name: "Thai Fried Rice Chicken", price: "₹210", desc: "Jasmine rice tossed with chicken, pineapple bits, cashews, and fish sauce." },
-      { name: "Prawn Fried Rice", price: "₹290", desc: "Rice stir-fried with juicy prawns, egg, and green onion." },
-      { name: "Jade Dragon Wok Fried Rice Chicken / Seafood", price: "₹250", desc: "Signature wok rice tossed with mixed seafood, chicken, and secret spices." }
+      { name: "Chicken Fried Rice", price: "₹200", desc: "Classic fried rice tossed with egg scramble and seasoned chicken cubes.", img: imgChickenFriedRice },
+      { name: "Burnt Garlic Fried Rice Chicken", price: "₹200", desc: "Fragrant fried rice tossed with chicken and heavy burnt garlic flavor.", img: imgBurntGarlicRiceChicken },
+      { name: "Egg Fried Rice", price: "₹180", desc: "Wok-tossed rice with scrambled eggs, white pepper, and green onions.", img: imgEggFriedRice },
+      { name: "Chicken Schezwan Fried Rice", price: "₹200", desc: "Fiery red fried rice tossed with chicken chunks and Schezwan chili paste.", img: imgSchezwanRiceChicken },
+      { name: "Chicken Chilli Garlic Fried Rice", price: "₹200", desc: "Fried rice seasoned with red chilis, lots of garlic, and chicken.", img: imgChilliGarlicRiceChicken },
+      { name: "Yangzhou Fried Rice - Seafood Chicken", price: "₹230", desc: "Traditional Chinese style rice tossed with prawns, chicken, and egg.", img: imgYangzhouRice },
+      { name: "Thai Fried Rice Chicken", price: "₹210", desc: "Jasmine rice tossed with chicken, pineapple bits, cashews, and fish sauce.", img: imgThaiRiceChicken },
+      { name: "Prawn Fried Rice", price: "₹290", desc: "Rice stir-fried with juicy prawns, egg, and green onion.", img: imgPrawnFriedRice },
+      { name: "Jade Dragon Wok Fried Rice Chicken / Seafood", price: "₹250", desc: "Signature wok rice tossed with mixed seafood, chicken, and secret spices.", img: 'https://images.unsplash.com/photo-1603133872878-685f588c2a3d?w=600&auto=format&fit=crop&q=80' }
     ]
   },
   'Main Course': {
     veg: [
-      { name: "Stir Fried Chinese Greens", price: "₹220", desc: "Exotic Chinese bok choy, broccoli, and snow peas tossed with light garlic." },
-      { name: "Exotic Vegetables Choice Of Sauce", price: "₹240", desc: "Exotic vegetables in your choice of Schezwan, Hot Garlic, or Sweet Sour sauce." },
-      { name: "Sweet N' Sour Vegetables", price: "₹240", desc: "Pineapple, peppers, and fried vegetables in a classic sweet and sour red sauce." },
-      { name: "Hachu Lachu Vegetables Spicy", price: "₹190", desc: "Mixed vegetables fried and tossed in a spicy, sour, dry chef special sauce." },
-      { name: "Veg American Chopsuey", price: "₹200", desc: "Crispy fried noodles topped with a sweet-sour tomato vegetable sauce and fried egg alternative." },
-      { name: "Veg Thai Green / Red Curry Served With Steamed Rice", price: "₹260", desc: "Authentic Thai coconut curry packed with vegetables, served with Jasmine rice." },
-      { name: "Jade Dragon Wok Thai Curry", price: "₹300", desc: "Premium thick Thai curry loaded with exotic herbs and local organic veggies." }
+      { name: "Stir Fried Chinese Greens", price: "₹220", desc: "Exotic Chinese bok choy, broccoli, and snow peas tossed with light garlic.", img: imgStirFriedGreens },
+      { name: "Exotic Vegetables Choice Of Sauce", price: "₹240", desc: "Exotic vegetables in your choice of Schezwan, Hot Garlic, or Sweet Sour sauce.", img: imgExoticVeg },
+      { name: "Sweet N' Sour Vegetables", price: "₹240", desc: "Pineapple, peppers, and fried vegetables in a classic sweet and sour red sauce.", img: imgSweetSourVeg },
+      { name: "Hachu Lachu Vegetables Spicy", price: "₹190", desc: "Mixed vegetables fried and tossed in a spicy, sour, dry chef special sauce.", img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&auto=format&fit=crop&q=80' },
+      { name: "Veg American Chopsuey", price: "₹200", desc: "Crispy fried noodles topped with a sweet-sour tomato vegetable sauce and fried egg alternative.", img: imgVegChopsuey },
+      { name: "Veg Thai Green / Red Curry Served With Steamed Rice", price: "₹260", desc: "Authentic Thai coconut curry packed with vegetables, served with Jasmine rice.", img: imgVegThaiCurry },
+      { name: "Jade Dragon Wok Thai Curry", price: "₹300", desc: "Premium thick Thai curry loaded with exotic herbs and local organic veggies.", img: imgJadeDragonThaiCurry }
     ],
     nonVeg: [
-      { name: "Sweet N' Sour Chicken", price: "₹250", desc: "Crispy chicken strips tossed in classic sweet pineapple tomato glaze." },
-      { name: "Sliced Fish Choice Of Sauce", price: "₹310", desc: "Tender fish slices cooked in choice of Schezwan, Black Bean, or Ginger Wine sauce." },
-      { name: "Sliced Chicken Choice Of Sauce", price: "₹280", desc: "Chicken breast slices cooked in hot garlic, black pepper, or soy ginger sauce." },
-      { name: "Chicken Thai Curry Red / Green", price: "₹330", desc: "Traditional Thai coconut curry loaded with chicken, served with steamed rice." },
-      { name: "Jade Dragon Wok Thai Curry Red / Green", price: "₹350", desc: "Chef's signature spicy Thai curry with chicken, prawns, and bamboo shoots." },
-      { name: "Butter Chilli Garlic Prawns In Sauce", price: "₹640", desc: "Prawns simmered in a rich butter, garlic, and fresh green chili reduction sauce." },
-      { name: "Prawns Chilli Sambal Sauce", price: "₹640", desc: "Wok-cooked prawns tossed in hot Indonesian chili sambal sauce." }
+      { name: "Sweet N' Sour Chicken", price: "₹250", desc: "Crispy chicken strips tossed in classic sweet pineapple tomato glaze.", img: imgSweetSourChicken },
+      { name: "Sliced Fish Choice Of Sauce", price: "₹310", desc: "Tender fish slices cooked in choice of Schezwan, Black Bean, or Ginger Wine sauce.", img: imgSlicedFish },
+      { name: "Sliced Chicken Choice Of Sauce", price: "₹280", desc: "Chicken breast slices cooked in hot garlic, black pepper, or soy ginger sauce.", img: 'https://images.unsplash.com/photo-1525755662778-989d0524087e?w=600&auto=format&fit=crop&q=80' },
+      { name: "Chicken Thai Curry Red / Green", price: "₹330", desc: "Traditional Thai coconut curry loaded with chicken, served with steamed rice.", img: imgChickenThaiCurry },
+      { name: "Jade Dragon Wok Thai Curry Red / Green", price: "₹350", desc: "Chef's signature spicy Thai curry with chicken, prawns, and bamboo shoots.", img: imgJadeDragonThaiCurry },
+      { name: "Butter Chilli Garlic Prawns In Sauce", price: "₹640", desc: "Prawns simmered in a rich butter, garlic, and fresh green chili reduction sauce.", img: imgButterPrawns },
+      { name: "Prawns Chilli Sambal Sauce", price: "₹640", desc: "Wok-cooked prawns tossed in hot Indonesian chili sambal sauce.", img: imgPrawnsChilliSambal }
     ]
   },
   'Desserts': {
     veg: [
-      { name: "Darsaan", price: "₹190", desc: "Honey-glazed crispy noodle threads sprinkled with sesame seeds, served with vanilla ice cream." },
-      { name: "Date Pancakes", price: "₹230", desc: "Fried pancakes stuffed with sweet date paste, served hot with ice cream." },
-      { name: "Banana Pancakes", price: "₹190", desc: "Warm sweet banana pancakes topped with honey drizzle." },
-      { name: "Dragon Chocolate Roll", price: "₹230", desc: "Crispy rolls filled with melted dark chocolate sauce, served with ice cream." },
-      { name: "Choice Of Icecream", price: "₹190", desc: "Selection of premium vanilla, chocolate, or strawberry scoops." }
+      { name: "Darsaan", price: "₹190", desc: "Honey-glazed crispy noodle threads sprinkled with sesame seeds, served with vanilla ice cream.", img: imgDarsaan },
+      { name: "Date Pancakes", price: "₹230", desc: "Fried pancakes stuffed with sweet date paste, served hot with ice cream.", img: imgDatePancakes },
+      { name: "Banana Pancakes", price: "₹190", desc: "Warm sweet banana pancakes topped with honey drizzle.", img: imgBananaPancakes },
+      { name: "Dragon Chocolate Roll", price: "₹230", desc: "Crispy rolls filled with melted dark chocolate sauce, served with ice cream.", img: imgChocolateRoll },
+      { name: "Choice Of Icecream", price: "₹190", desc: "Selection of premium vanilla, chocolate, or strawberry scoops.", img: 'https://images.unsplash.com/photo-1501443715855-6cb290d78a45?w=600&auto=format&fit=crop&q=80' }
     ],
     nonVeg: []
   }
@@ -139,9 +231,15 @@ const MENU_DATA = {
 export default function Menu({ cart, addToCart, updateQty }) {
   const [selectedCat, setSelectedCat] = useState('Soups');
 
-  // Helper to map fallback visual Unsplash images per dish type
-  // Highly accurate food photography mapping based on specific culinary keywords
-  const getItemImage = (itemName) => {
+  // Returns the dish's own local image if available, otherwise falls back to Unsplash keyword mapping
+  const getItemImage = (item) => {
+    if (item.img) return item.img;
+    const itemName = item.name || '';
+    return getUnsplashFallback(itemName);
+  };
+
+  // Fallback Unsplash images by keyword (used only when no local asset is provided)
+  const getUnsplashFallback = (itemName) => {
     const name = itemName.toLowerCase();
     
     // Dimsums & Dumplings (Bamboo Steamer Baskets)
@@ -292,7 +390,7 @@ export default function Menu({ cart, addToCart, updateQty }) {
         <AnimatePresence mode="popLayout">
           {mergedItems.map(item => {
             const cartItem = cart.find(i => i.name === item.name);
-            const itemImg = getItemImage(item.name);
+            const itemImg = getItemImage(item);
 
             return (
               <motion.div
