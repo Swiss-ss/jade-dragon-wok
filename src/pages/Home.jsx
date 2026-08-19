@@ -34,7 +34,8 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
 
     const fullMessage = [header, bookingMeta, reservationDetails, footer].join('\n\n');
     const encodedMessage = encodeURIComponent(fullMessage);
-    const whatsappUrl = `https://wa.me/919219603033?text=${encodedMessage}`;
+    // Table bookings go to +91 92589 83691
+    const whatsappUrl = `https://wa.me/919258983691?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
 
     setBookingConfirmed(true);
@@ -376,11 +377,11 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
                 <Facebook size={16} />
               </a>
               <a 
-                href="https://wa.me/919219603033" 
+                href="https://wa.me/919219603033?text=Hi%20Jade%20Dragon%20Wok%20team%2C%20I%20have%20a%20query." 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="hover:text-cinnabar transition-colors cursor-pointer"
-                aria-label="WhatsApp"
+                aria-label="WhatsApp Support & Queries"
               >
                 <MessageCircle size={16} />
               </a>

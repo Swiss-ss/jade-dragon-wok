@@ -35,7 +35,8 @@ export default function Contact() {
 
     const fullMessage = [header, bookingMeta, reservationDetails, footer].join('\n\n');
     const encodedMessage = encodeURIComponent(fullMessage);
-    const whatsappUrl = `https://wa.me/919219603033?text=${encodedMessage}`;
+    // Table bookings go to +91 92589 83691
+    const whatsappUrl = `https://wa.me/919258983691?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
 
     setBookingConfirmed(true);
@@ -44,6 +45,24 @@ export default function Contact() {
 
   const handleInquirySubmit = (e) => {
     e.preventDefault();
+
+    const queryId = 'JDW-Q' + Math.floor(1000 + Math.random() * 9000);
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+    const formattedTime = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+    const header = `⛩️ *JADE DRAGON WOK CAFE — CUSTOMER QUERY / INQUIRY*\n──────────────────────────────`;
+    const queryMeta = `🆔 *Inquiry Ref:* #${queryId}\n📅 *Time:* ${formattedDate}, ${formattedTime}`;
+    const senderDetails = `👤 *CONTACT DETAILS*\n• *Name:* ${inquiry.name.trim()}\n• *Email:* ${inquiry.email.trim()}`;
+    const messageBody = `💬 *MESSAGE / INQUIRY*\n"${inquiry.message.trim()}"`;
+    const footer = `🚀 *Sent via Jade Dragon Wok Website*\n_Please reply to this customer query._`;
+
+    const fullMessage = [header, queryMeta, senderDetails, messageBody, footer].join('\n\n');
+    const encodedMessage = encodeURIComponent(fullMessage);
+    // Queries go to +91 92196 03033
+    const whatsappUrl = `https://wa.me/919219603033?text=${encodedMessage}`;
+    window.open(whatsappUrl, '_blank');
+
     setInquirySent(true);
     setTimeout(() => {
       setInquirySent(false);
@@ -132,11 +151,11 @@ export default function Contact() {
             <div className="flex items-center gap-4">
               <Phone size={18} className="text-cinnabar" />
               <div>
-                <p className="text-zinc-500 font-bold uppercase tracking-widest text-[9px]">Phone Support</p>
-                <p className="text-white mt-1">
-                  +91 92196 03033<br />
-                  +91 92589 83691
-                </p>
+                <p className="text-zinc-500 font-bold uppercase tracking-widest text-[9px]">Phone & WhatsApp</p>
+                <div className="text-white mt-1 space-y-1">
+                  <p><span className="text-cinnabar font-semibold">Orders & Bookings:</span> +91 92589 83691</p>
+                  <p><span className="text-zinc-400 font-semibold">General Queries:</span> +91 92196 03033</p>
+                </div>
               </div>
             </div>
 

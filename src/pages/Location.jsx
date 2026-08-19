@@ -62,10 +62,10 @@ export default function Location() {
               <Phone size={16} className="text-cinnabar mt-1 flex-shrink-0" />
               <div>
                 <p className="font-bold text-white uppercase tracking-wider text-[9px] text-zinc-500">Lounge Contact</p>
-                <p className="text-zinc-400 mt-1 text-xs">
-                  +91 92196 03033<br />
-                  +91 92589 83691
-                </p>
+                <div className="text-zinc-400 mt-1 text-xs space-y-0.5">
+                  <p><span className="text-cinnabar font-semibold">Orders & Bookings:</span> +91 92589 83691</p>
+                  <p><span className="text-zinc-500 font-semibold">General Queries:</span> +91 92196 03033</p>
+                </div>
               </div>
             </div>
           </div>

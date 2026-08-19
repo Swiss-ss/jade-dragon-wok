@@ -116,8 +116,8 @@ function AppContent() {
       .join('\n\n');
 
     const encodedMessage = encodeURIComponent(fullMessage);
-    // WhatsApp destination number set to +91 92196 03033
-    const whatsappUrl = `https://wa.me/919219603033?text=${encodedMessage}`;
+    // Food orders go to +91 92589 83691
+    const whatsappUrl = `https://wa.me/919258983691?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
 
     // Save order data for receipt PDF
@@ -345,9 +345,9 @@ function AppContent() {
               <div className="border-t border-zinc-900 pt-4 text-center flex flex-col gap-3">
                 <div>
                   <span className="text-[8px] tracking-[0.25em] text-zinc-600 block uppercase mb-1">UPES BIDHOLI</span>
-                  <p className="text-[9px] text-zinc-500 font-sans leading-relaxed">
-                    +91 92196 03033<br />
-                    +91 92589 83691
+                  <p className="text-[9px] text-zinc-400 font-sans leading-relaxed">
+                    <span className="text-cinnabar">Orders & Bookings:</span> +91 92589 83691<br />
+                    <span className="text-zinc-500">Queries:</span> +91 92196 03033
                   </p>
                 </div>
                 
@@ -372,11 +372,11 @@ function AppContent() {
                     <Facebook size={14} />
                   </a>
                   <a 
-                    href="https://wa.me/919219603033" 
+                    href="https://wa.me/919219603033?text=Hi%20Jade%20Dragon%20Wok%20team%2C%20I%20have%20a%20query." 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="hover:text-cinnabar transition-colors cursor-pointer" 
-                    aria-label="WhatsApp"
+                    aria-label="WhatsApp Support & Queries"
                   >
                     <MessageCircle size={14} />
                   </a>
@@ -612,7 +612,7 @@ function AppContent() {
                     doc.setFont('helvetica', 'normal');
                     doc.text('Bidholi Rd, Near UPES Campus, Dehradun, Uttarakhand 248007', 105, y, { align: 'center' });
                     y += 5;
-                    doc.text('Phone: +91 92196 03033 | +91 92589 83691', 105, y, { align: 'center' });
+                    doc.text('Orders & Bookings: +91 92589 83691 | Queries: +91 92196 03033', 105, y, { align: 'center' });
                     y += 8;
 
                     // Divider
@@ -687,7 +687,7 @@ function AppContent() {
                     doc.setFont('helvetica', 'normal');
                     doc.setTextColor(130);
                     doc.text('Thank you for ordering from Jade Dragon Wok!', 105, y + 5, { align: 'center' });
-                    doc.text('This receipt was generated automatically. For queries, call +91 92196 03033.', 105, y + 10, { align: 'center' });
+                    doc.text('For order queries: +91 92589 83691 | General inquiries: +91 92196 03033.', 105, y + 10, { align: 'center' });
 
                     doc.save(`JDW-Receipt-${d.orderId}.pdf`);
                   }}

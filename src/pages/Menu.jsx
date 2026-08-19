@@ -89,13 +89,14 @@ import imgChickenThaiCurry from '../assets/Chicken Thai Curry Red-Green.webp';
 import imgButterPrawns from '../assets/Butter Chilli Garlic Prawns In Sauce.webp';
 import imgPrawnsChilliSambal from '../assets/Prawns Chilli Sambal Sauce.webp';
 
-// --- Desserts ---
+// --- Desserts & Beverages ---
 import imgDarsaan from '../assets/Darsaan.webp';
 import imgDatePancakes from '../assets/Date Pancakes.webp';
 import imgBananaPancakes from '../assets/Banana Pancakes.webp';
 import imgChocolateRoll from '../assets/Dragon Chocolate Roll.webp';
+import imgBudweiser from '../assets/budweiser-0-0-non-alcoholic-beer-can-330ml-1000x1000.webp';
 
-const MENU_CATEGORIES = ['Soups', 'Starters', 'Asian Noodles', 'Fried Rice', 'Main Course', 'Desserts'];
+const MENU_CATEGORIES = ['Soups', 'Starters', 'Asian Noodles', 'Fried Rice', 'Main Course', 'Desserts', 'Beverages'];
 
 const MENU_DATA = {
   'Soups': {
@@ -208,7 +209,7 @@ const MENU_DATA = {
     ],
     nonVeg: [
       { name: "Sweet N' Sour Chicken", price: "₹250", desc: "Crispy chicken strips tossed in classic sweet pineapple tomato glaze.", img: imgSweetSourChicken },
-      { name: "Sliced Fish Choice Of Sauce", price: "₹310", desc: "Tender fish slices cooked in choice of Schezwan, Black Bean, or Ginger Wine sauce.", img: imgSlicedFish },
+      { name: "Sliced Fish Choice Of Sauce", price: "₹310", desc: "Tender fish slices cooked in choice of Schezwan, Black Bean, or Ginger Garlic sauce.", img: imgSlicedFish },
       { name: "Sliced Chicken Choice Of Sauce", price: "₹280", desc: "Chicken breast slices cooked in hot garlic, black pepper, or soy ginger sauce.", img: 'https://images.unsplash.com/photo-1525755662778-989d0524087e?w=600&auto=format&fit=crop&q=80' },
       { name: "Chicken Thai Curry Red / Green", price: "₹330", desc: "Traditional Thai coconut curry loaded with chicken, served with steamed rice.", img: imgChickenThaiCurry },
       { name: "Jade Dragon Wok Thai Curry Red / Green", price: "₹350", desc: "Chef's signature spicy Thai curry with chicken, prawns, and bamboo shoots.", img: imgJadeDragonThaiCurry },
@@ -223,6 +224,14 @@ const MENU_DATA = {
       { name: "Banana Pancakes", price: "₹190", desc: "Warm sweet banana pancakes topped with honey drizzle.", img: imgBananaPancakes },
       { name: "Dragon Chocolate Roll", price: "₹230", desc: "Crispy rolls filled with melted dark chocolate sauce, served with ice cream.", img: imgChocolateRoll },
       { name: "Choice Of Icecream", price: "₹190", desc: "Selection of premium vanilla, chocolate, or strawberry scoops.", img: 'https://images.unsplash.com/photo-1501443715855-6cb290d78a45?w=600&auto=format&fit=crop&q=80' }
+    ],
+    nonVeg: []
+  },
+  'Beverages': {
+    veg: [
+      { name: "Budweiser 0.0 Non-Alcoholic Beer", price: "₹150", desc: "Crisp, refreshing 0.0% non-alcoholic beer with signature Budweiser barley malt taste.", img: imgBudweiser },
+      { name: "Fresh Lime Soda (Sweet / Salt)", price: "₹90", desc: "Crisp sparkling soda infused with freshly squeezed lime and herbs.", img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600&auto=format&fit=crop&q=80' },
+      { name: "Iced Lemon Tea", price: "₹110", desc: "Chilled brewed black tea with lemon juice, fresh mint, and ice.", img: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&auto=format&fit=crop&q=80' }
     ],
     nonVeg: []
   }
@@ -242,6 +251,14 @@ export default function Menu({ cart, addToCart, updateQty }) {
   const getUnsplashFallback = (itemName) => {
     const name = itemName.toLowerCase();
     
+    // Budweiser & Non-Alcoholic Beers / Drinks
+    if (name.includes('budweiser') || name.includes('beer') || name.includes('non-alcoholic')) {
+      return 'https://images.unsplash.com/photo-1608270199042-30a2106e2fa3?w=600&auto=format&fit=crop&q=80';
+    }
+    // Lime Soda & Cold Drinks
+    if (name.includes('lime') || name.includes('soda') || name.includes('tea')) {
+      return 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600&auto=format&fit=crop&q=80';
+    }
     // Dimsums & Dumplings (Bamboo Steamer Baskets)
     if (name.includes('dimsum') || name.includes('dumpling')) {
       return 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=600&auto=format&fit=crop&q=80';
