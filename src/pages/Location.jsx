@@ -45,7 +45,7 @@ export default function Location() {
               <div>
                 <p className="font-bold text-white uppercase tracking-wider text-[9px] text-zinc-500">Address</p>
                 <p className="text-zinc-400 mt-1 text-xs leading-relaxed">
-                  Jade Dragon Wok, Bidholi Rd, Near Sagar Fitness Gym (Near UPES Campus), Kandholi, Pondha, Dehradun, Uttarakhand 248007
+                  Jade Dragon Wok, CX39+R76, Kharakhet, Uttarakhand 249145
                 </p>
               </div>
             </div>
@@ -72,7 +72,7 @@ export default function Location() {
 
           <div className="pt-4 border-t border-zinc-800">
             <a 
-              href="https://maps.app.goo.gl/tBkrnB8yW6u2cdcc9" 
+              href="https://www.google.com/maps?q=30.404528,77.968147" 
               target="_blank" 
               rel="noopener noreferrer"
               className="w-full bg-zinc-850 hover:bg-zinc-800 text-white font-serif tracking-widest text-[9px] sm:text-[10px] uppercase py-3 rounded-xl border border-zinc-800 flex items-center justify-center gap-2 transition-all cursor-pointer"
@@ -85,7 +85,7 @@ export default function Location() {
         {/* Map iframe */}
         <div className="lg:col-span-2 h-[350px] lg:h-auto rounded-3xl overflow-hidden relative border border-zinc-800 bg-zinc-900/20 min-h-[350px]">
           <iframe 
-            src="https://maps.google.com/maps?q=Sagar%20Fitness%20Bidholi%20Dehradun&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+            src="https://maps.google.com/maps?q=30.404528,77.968147&t=&z=16&ie=UTF8&iwloc=&output=embed" 
             className="w-full h-full grayscale invert opacity-85 contrast-125 filter hue-rotate-180 border-0"
             allowFullScreen="" 
             loading="lazy" 
