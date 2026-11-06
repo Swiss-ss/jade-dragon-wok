@@ -1,15 +1,62 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Calendar, Clock, Users, Check, Sparkles, MapPin, Phone, ArrowRight, Instagram, Facebook, MessageCircle } from 'lucide-react';
+import { ChevronDown, Calendar, Clock, Users, Check, Sparkles, ArrowRight, Instagram, Facebook, MessageCircle } from 'lucide-react';
 
 // Best-looking dish images for visual showcase moments
 import dishLotusStem from '../assets/Lotus Stem Honey Chilli.webp';
 import dishSatay from '../assets/Thai Chicken Satay with Peanut Sauce.webp';
 import dishCantonese from '../assets/Dragon Cantonese Spicy Noodles.webp';
 import dishKungPao from '../assets/Wok Tossed Kung Pad Chicken.webp';
-import dishPadThai from '../assets/Chicken Pad Thai Noodles.webp';
-import dishPrawns from '../assets/Butter Chilli Garlic Prawns In Sauce.webp';
+
+/* ─── Card-stacking section wrapper ─── */
+function StackCard({ index, total, scrollProgress, children }) {
+  const isLast = index === total - 1;
+  const isFirst = index === 0;
+
+  // Each card scales down as the next card scrolls up over it
+  const start = index / (total - 1);
+  const end = (index + 1) / (total - 1);
+
+  // Smooth scale down to create layered depth
+  const scale = useTransform(
+    scrollProgress,
+    isLast ? [0, 1] : [start, end],
+    isLast ? [1, 1] : [1, 0.92]
+  );
+
+  // Subtle dimming as the card recedes into the background
+  const opacity = useTransform(
+    scrollProgress,
+    isLast ? [0, 1] : [start, end],
+    isLast ? [1, 1] : [1, 0.55]
+  );
+
+  // Slight upward shift for parallax feel
+  const y = useTransform(
+    scrollProgress,
+    isLast ? [0, 1] : [start, end],
+    isLast ? [0, 0] : [0, -20]
+  );
+
+  return (
+    <div
+      className="h-screen w-full sticky top-0"
+      style={{ zIndex: index + 1 }}
+    >
+      <motion.div
+        style={{ scale, opacity, y }}
+        className={`h-screen w-full origin-top overflow-hidden bg-zinc-950 ${
+          !isFirst
+            ? 'rounded-t-[28px] sm:rounded-t-[36px] border-t border-zinc-800/80 shadow-[0_-25px_60px_rgba(0,0,0,0.85)]'
+            : ''
+        }`}
+      >
+        {children}
+      </motion.div>
+    </div>
+  );
+}
 
 export default function Home({ scrollToSection, activeSection, onSectionChange, sectionRefs }) {
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
@@ -18,6 +65,22 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
     time: '7:30 PM',
     guests: '2 Guests'
   });
+
+  const containerRef = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    container: containerRef,
+  });
+
+  const handleScroll = (e) => {
+    const scrollTop = e.currentTarget.scrollTop;
+    const clientHeight = e.currentTarget.clientHeight;
+    if (clientHeight === 0) return;
+    const index = Math.round(scrollTop / clientHeight);
+    if (index >= 0 && index < 5 && index !== activeSection) {
+      onSectionChange(index);
+    }
+  };
 
   const handleBookingSubmit = (e) => {
     e.preventDefault();
@@ -34,7 +97,6 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
 
     const fullMessage = [header, bookingMeta, reservationDetails, footer].join('\n\n');
     const encodedMessage = encodeURIComponent(fullMessage);
-    // Table bookings go to +91 92589 83691
     const whatsappUrl = `https://wa.me/919258983691?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
 
@@ -42,15 +104,7 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
     setTimeout(() => setBookingConfirmed(false), 4000);
   };
 
-  const handleScroll = (e) => {
-    const scrollTop = e.currentTarget.scrollTop;
-    const clientHeight = e.currentTarget.clientHeight;
-    if (clientHeight === 0) return;
-    const index = Math.round(scrollTop / clientHeight);
-    if (index >= 0 && index < 5 && index !== activeSection) {
-      onSectionChange(index);
-    }
-  };
+  const TOTAL_SECTIONS = 5;
 
   return (
     <div className="h-screen w-full relative overflow-hidden">
@@ -77,322 +131,331 @@ export default function Home({ scrollToSection, activeSection, onSectionChange, 
         )}
       </AnimatePresence>
 
-      {/* MAIN SNAPPING CONTAINER (5 h-screen sections) */}
+      {/* CARD-STACKING SCROLL CONTAINER */}
       <main 
+        ref={containerRef}
         onScroll={handleScroll}
-        className="h-screen w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth no-scrollbar"
+        className="h-screen w-full overflow-y-auto scroll-smooth no-scrollbar"
       >
-        
         {/* ===================== SCENE 1: THE HOOK ===================== */}
-        <section 
-          ref={sectionRefs[0]} 
-          className="h-screen w-full snap-start relative flex flex-col justify-center items-center text-center px-4 bg-zinc-950"
-        >
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=1600&auto=format&fit=crop&q=80')] bg-cover bg-center" />
-          <div className="absolute inset-0 bg-black/65 bg-gradient-to-t from-zinc-950 via-transparent to-black/75" />
+        <StackCard index={0} total={TOTAL_SECTIONS} scrollProgress={scrollYProgress}>
+          <section 
+            ref={sectionRefs[0]} 
+            className="h-screen w-full relative flex flex-col justify-center items-center text-center px-4 bg-zinc-950"
+          >
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=1600&auto=format&fit=crop&q=80')] bg-cover bg-center" />
+            <div className="absolute inset-0 bg-black/65 bg-gradient-to-t from-zinc-950 via-transparent to-black/75" />
 
-          <div className="relative z-10 max-w-4xl">
-            <motion.span 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-cinnabar font-serif tracking-[0.35em] text-xs sm:text-sm uppercase block mb-4"
-            >
-              BEST CHINESE & ASIAN RESTAURANT IN BIDHOLI, DEHRADUN
-            </motion.span>
-            <motion.h1 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.4 }}
-              className="font-serif text-5xl sm:text-7xl md:text-8xl font-bold tracking-tight text-white leading-tight uppercase"
-            >
-              Jade Dragon Wok<br />
-              <span className="italic font-normal text-zinc-300 normal-case">Authentic Wok-Fired Flavours Near UPES Campus.</span>
-            </motion.h1>
-          </div>
+            <div className="relative z-10 max-w-4xl">
+              <motion.span 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="text-cinnabar font-serif tracking-[0.35em] text-xs sm:text-sm uppercase block mb-4"
+              >
+                BEST CHINESE & ASIAN RESTAURANT IN BIDHOLI, DEHRADUN
+              </motion.span>
+              <motion.h1 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.4 }}
+                className="font-serif text-5xl sm:text-7xl md:text-8xl font-bold tracking-tight text-white leading-tight uppercase"
+              >
+                Jade Dragon Wok<br />
+                <span className="italic font-normal text-zinc-300 normal-case">Authentic Wok-Fired Flavours Near UPES Campus.</span>
+              </motion.h1>
+            </div>
 
-          <div className="absolute bottom-28 z-10 flex flex-col items-center">
-            <span className="text-[10px] tracking-[0.3em] uppercase text-zinc-400 font-sans mb-1">Scroll to Explore</span>
-            <motion.button 
-              animate={{ y: [0, 8, 0] }}
-              transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
-              onClick={() => scrollToSection(1)}
-              className="text-zinc-400 hover:text-cinnabar transition-colors"
-              aria-label="Scroll Down"
-            >
-              <ChevronDown size={20} />
-            </motion.button>
-          </div>
-        </section>
+            <div className="absolute bottom-28 z-10 flex flex-col items-center">
+              <span className="text-[10px] tracking-[0.3em] uppercase text-zinc-400 font-sans mb-1">Scroll to Explore</span>
+              <motion.button 
+                animate={{ y: [0, 8, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
+                onClick={() => scrollToSection(1)}
+                className="text-zinc-400 hover:text-cinnabar transition-colors cursor-pointer"
+                aria-label="Scroll Down"
+              >
+                <ChevronDown size={20} />
+              </motion.button>
+            </div>
+          </section>
+        </StackCard>
 
         {/* ===================== SCENE 2: THE CRAFT ===================== */}
-        <section 
-          ref={sectionRefs[1]} 
-          className="h-screen w-full snap-start relative flex flex-col lg:flex-row bg-zinc-950"
-        >
-          <div className="h-[38vh] lg:h-full lg:w-1/2 relative overflow-hidden">
-            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${dishLotusStem})` }} />
-            <div className="absolute inset-0 bg-black/40 lg:bg-transparent" />
-            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-zinc-950 to-transparent lg:hidden" />
-            <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-zinc-950 to-transparent hidden lg:block" />
-          </div>
-
-          <div className="h-[62vh] lg:h-full lg:w-1/2 flex flex-col justify-start lg:justify-center items-start px-8 sm:px-16 lg:px-20 pt-4 lg:pt-0 pb-4 lg:pb-0 relative bg-zinc-950">
-            <span className="text-cinnabar font-serif tracking-[0.3em] text-xs uppercase block mb-3">THE CRAFT</span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 uppercase tracking-wide">
-              Obsessive<br />Preparation.
-            </h2>
-            <p className="text-zinc-400 font-sans text-xs sm:text-sm leading-relaxed max-w-md mb-6">
-              Experience the best Asian cuisine in Bidholi. We serve hand-pulled noodles, spicy dim sum, and wok-tossed specialties crafted daily. Located just outside UPES, Jade Dragon Wok is the premier destination for authentic Chinese food lovers in Dehradun.
-            </p>
-            <Link 
-              to="/about"
-              className="text-white hover:text-cinnabar font-serif tracking-widest text-xs uppercase flex items-center gap-2 border-b border-white hover:border-cinnabar pb-1 transition-colors"
-            >
-              Read About Us <ArrowRight size={14} />
-            </Link>
-          </div>
-        </section>
-
-        {/* ===================== SCENE 3: THE FEAST ===================== */}
-        <section 
-          ref={sectionRefs[2]} 
-          className="h-screen w-full snap-start relative bg-zinc-950 flex flex-col justify-center px-6 sm:px-12 md:px-20 pb-12 md:pb-0"
-        >
-          <div className="max-w-7xl mx-auto w-full">
-            <div className="flex justify-between items-end mb-8">
-              <div>
-                <span className="text-cinnabar font-serif tracking-[0.3em] text-xs uppercase block mb-3">THE OFFERINGS</span>
-                <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider">
-                  Explore the Menu
-                </h2>
-              </div>
-              <Link 
-                to="/menu" 
-                className="text-white hover:text-cinnabar font-serif tracking-widest text-xs uppercase flex items-center gap-2 border-b border-white hover:border-cinnabar pb-1 transition-colors hidden sm:flex"
-              >
-                View Full Menu <ArrowRight size={14} />
-              </Link>
+        <StackCard index={1} total={TOTAL_SECTIONS} scrollProgress={scrollYProgress}>
+          <section 
+            ref={sectionRefs[1]} 
+            className="h-screen w-full relative flex flex-col lg:flex-row bg-zinc-950"
+          >
+            <div className="h-[38vh] lg:h-full lg:w-1/2 relative overflow-hidden">
+              <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${dishLotusStem})` }} />
+              <div className="absolute inset-0 bg-black/40 lg:bg-transparent" />
+              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-zinc-950 to-transparent lg:hidden" />
+              <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-zinc-950 to-transparent hidden lg:block" />
             </div>
 
-            {/* Horizontal Scroll Carousel */}
-            <div className="flex gap-6 overflow-x-auto snap-x no-scrollbar pb-8 w-full scroll-smooth">
-              
-              <div className="min-w-[280px] sm:min-w-[320px] bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-4 flex flex-col justify-between h-[340px] snap-center">
-                <div className="h-40 w-full rounded-xl overflow-hidden relative">
-                  <img src={dishCantonese} alt="Dragon Cantonese Spicy Noodles" className="w-full h-full object-cover" />
-                  <span className="absolute top-3 left-3 bg-[#E34234] text-white text-[9px] font-sans tracking-widest uppercase font-semibold px-2 py-0.5 rounded">Spicy</span>
-                </div>
-                <div className="mt-4 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h4 className="font-serif text-lg font-bold text-white tracking-wide uppercase">Dragon Cantonese Noodles</h4>
-                    <p className="text-xs text-zinc-400 font-sans mt-1">Sautéed flat wheat noodles with bird's eye chili, sweet basil.</p>
-                  </div>
-                  <span className="font-serif text-base font-semibold text-zinc-300 mt-2">₹240</span>
-                </div>
-              </div>
-
-              <div className="min-w-[280px] sm:min-w-[320px] bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-4 flex flex-col justify-between h-[340px] snap-center">
-                <div className="h-40 w-full rounded-xl overflow-hidden relative">
-                  <img src={dishSatay} alt="Thai Chicken Satay" className="w-full h-full object-cover" />
-                  <span className="absolute top-3 left-3 bg-amber-600 text-white text-[9px] font-sans tracking-widest uppercase font-semibold px-2 py-0.5 rounded">Signature</span>
-                </div>
-                <div className="mt-4 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h4 className="font-serif text-lg font-bold text-white tracking-wide uppercase">Thai Chicken Satay</h4>
-                    <p className="text-xs text-zinc-400 font-sans mt-1">Grilled chicken skewers with coconut marinade and warm peanut sauce.</p>
-                  </div>
-                  <span className="font-serif text-base font-semibold text-zinc-300 mt-2">₹290</span>
-                </div>
-              </div>
-
-              <div className="min-w-[280px] sm:min-w-[320px] bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-4 flex flex-col justify-between h-[340px] snap-center">
-                <div className="h-40 w-full rounded-xl overflow-hidden relative">
-                  <img src={dishKungPao} alt="Wok Tossed Kung Pao Chicken" className="w-full h-full object-cover" />
-                  <span className="absolute top-3 left-3 bg-[#E34234] text-white text-[9px] font-sans tracking-widest uppercase font-semibold px-2 py-0.5 rounded">Spicy</span>
-                </div>
-                <div className="mt-4 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h4 className="font-serif text-lg font-bold text-white tracking-wide uppercase">Wok Kung Pao Chicken</h4>
-                    <p className="text-xs text-zinc-400 font-sans mt-1">Wok-fired chicken cubes tossed with dry red chilis and cashews.</p>
-                  </div>
-                  <span className="font-serif text-base font-semibold text-zinc-300 mt-2">₹280</span>
-                </div>
-              </div>
-
-            </div>
-
-            <div className="mt-4 sm:hidden">
+            <div className="h-[62vh] lg:h-full lg:w-1/2 flex flex-col justify-start lg:justify-center items-start px-8 sm:px-16 lg:px-20 pt-4 lg:pt-0 pb-4 lg:pb-0 relative bg-zinc-950">
+              <span className="text-cinnabar font-serif tracking-[0.3em] text-xs uppercase block mb-3">THE CRAFT</span>
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 uppercase tracking-wide">
+                Obsessive<br />Preparation.
+              </h2>
+              <p className="text-zinc-400 font-sans text-xs sm:text-sm leading-relaxed max-w-md mb-6">
+                Experience the best Asian cuisine in Bidholi. We serve hand-pulled noodles, spicy dim sum, and wok-tossed specialties crafted daily. Located just outside UPES, Jade Dragon Wok is the premier destination for authentic Chinese food lovers in Dehradun.
+              </p>
               <Link 
-                to="/menu" 
+                to="/about"
                 className="text-white hover:text-cinnabar font-serif tracking-widest text-xs uppercase flex items-center gap-2 border-b border-white hover:border-cinnabar pb-1 transition-colors"
               >
-                View Full Menu <ArrowRight size={14} />
+                Read About Us <ArrowRight size={14} />
               </Link>
             </div>
-          </div>
-        </section>
+          </section>
+        </StackCard>
+
+        {/* ===================== SCENE 3: THE FEAST ===================== */}
+        <StackCard index={2} total={TOTAL_SECTIONS} scrollProgress={scrollYProgress}>
+          <section 
+            ref={sectionRefs[2]} 
+            className="h-screen w-full relative bg-zinc-950 flex flex-col justify-center px-6 sm:px-12 md:px-20 pb-12 md:pb-0"
+          >
+            <div className="max-w-7xl mx-auto w-full">
+              <div className="flex justify-between items-end mb-8">
+                <div>
+                  <span className="text-cinnabar font-serif tracking-[0.3em] text-xs uppercase block mb-3">THE OFFERINGS</span>
+                  <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-white uppercase tracking-wider">
+                    Explore the Menu
+                  </h2>
+                </div>
+                <Link 
+                  to="/menu" 
+                  className="text-white hover:text-cinnabar font-serif tracking-widest text-xs uppercase flex items-center gap-2 border-b border-white hover:border-cinnabar pb-1 transition-colors hidden sm:flex"
+                >
+                  View Full Menu <ArrowRight size={14} />
+                </Link>
+              </div>
+
+              {/* Horizontal Scroll Carousel */}
+              <div className="flex gap-6 overflow-x-auto snap-x no-scrollbar pb-8 w-full scroll-smooth">
+                
+                <div className="min-w-[280px] sm:min-w-[320px] bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-4 flex flex-col justify-between h-[340px] snap-center">
+                  <div className="h-40 w-full rounded-xl overflow-hidden relative">
+                    <img src={dishCantonese} alt="Dragon Cantonese Spicy Noodles" className="w-full h-full object-cover" />
+                    <span className="absolute top-3 left-3 bg-[#E34234] text-white text-[9px] font-sans tracking-widest uppercase font-semibold px-2 py-0.5 rounded">Spicy</span>
+                  </div>
+                  <div className="mt-4 flex-1 flex flex-col justify-between">
+                    <div>
+                      <h4 className="font-serif text-lg font-bold text-white tracking-wide uppercase">Dragon Cantonese Noodles</h4>
+                      <p className="text-xs text-zinc-400 font-sans mt-1">Sautéed flat wheat noodles with bird's eye chili, sweet basil.</p>
+                    </div>
+                    <span className="font-serif text-base font-semibold text-zinc-300 mt-2">₹240</span>
+                  </div>
+                </div>
+
+                <div className="min-w-[280px] sm:min-w-[320px] bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-4 flex flex-col justify-between h-[340px] snap-center">
+                  <div className="h-40 w-full rounded-xl overflow-hidden relative">
+                    <img src={dishSatay} alt="Thai Chicken Satay" className="w-full h-full object-cover" />
+                    <span className="absolute top-3 left-3 bg-amber-600 text-white text-[9px] font-sans tracking-widest uppercase font-semibold px-2 py-0.5 rounded">Signature</span>
+                  </div>
+                  <div className="mt-4 flex-1 flex flex-col justify-between">
+                    <div>
+                      <h4 className="font-serif text-lg font-bold text-white tracking-wide uppercase">Thai Chicken Satay</h4>
+                      <p className="text-xs text-zinc-400 font-sans mt-1">Grilled chicken skewers with coconut marinade and warm peanut sauce.</p>
+                    </div>
+                    <span className="font-serif text-base font-semibold text-zinc-300 mt-2">₹290</span>
+                  </div>
+                </div>
+
+                <div className="min-w-[280px] sm:min-w-[320px] bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-4 flex flex-col justify-between h-[340px] snap-center">
+                  <div className="h-40 w-full rounded-xl overflow-hidden relative">
+                    <img src={dishKungPao} alt="Wok Tossed Kung Pao Chicken" className="w-full h-full object-cover" />
+                    <span className="absolute top-3 left-3 bg-[#E34234] text-white text-[9px] font-sans tracking-widest uppercase font-semibold px-2 py-0.5 rounded">Spicy</span>
+                  </div>
+                  <div className="mt-4 flex-1 flex flex-col justify-between">
+                    <div>
+                      <h4 className="font-serif text-lg font-bold text-white tracking-wide uppercase">Wok Kung Pao Chicken</h4>
+                      <p className="text-xs text-zinc-400 font-sans mt-1">Wok-fired chicken cubes tossed with dry red chilis and cashews.</p>
+                    </div>
+                    <span className="font-serif text-base font-semibold text-zinc-300 mt-2">₹280</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <div className="mt-4 sm:hidden">
+                <Link 
+                  to="/menu" 
+                  className="text-white hover:text-cinnabar font-serif tracking-widest text-xs uppercase flex items-center gap-2 border-b border-white hover:border-cinnabar pb-1 transition-colors"
+                >
+                  View Full Menu <ArrowRight size={14} />
+                </Link>
+              </div>
+            </div>
+          </section>
+        </StackCard>
 
         {/* ===================== SCENE 4: THE SPACE ===================== */}
-        <section 
-          ref={sectionRefs[3]} 
-          className="h-screen w-full snap-start relative flex flex-col justify-center md:justify-end p-8 sm:p-16 lg:p-24 bg-zinc-950 pb-14 md:pb-24"
-        >
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&auto=format&fit=crop&q=80')] bg-cover bg-center" />
-          <div className="absolute inset-0 bg-black/60 bg-gradient-to-t from-zinc-950 via-transparent to-black/30" />
+        <StackCard index={3} total={TOTAL_SECTIONS} scrollProgress={scrollYProgress}>
+          <section 
+            ref={sectionRefs[3]} 
+            className="h-screen w-full relative flex flex-col justify-center md:justify-end p-8 sm:p-16 lg:p-24 bg-zinc-950 pb-14 md:pb-24"
+          >
+            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&auto=format&fit=crop&q=80')] bg-cover bg-center" />
+            <div className="absolute inset-0 bg-black/60 bg-gradient-to-t from-zinc-950 via-transparent to-black/30" />
 
-          <div className="relative z-10 max-w-xl mb-0 md:mb-14">
-            <span className="text-cinnabar font-serif tracking-[0.3em] text-xs uppercase block mb-3">THE ATMOSPHERE</span>
-            <h2 className="font-serif text-4xl sm:text-6xl font-bold text-white uppercase tracking-wider mb-4 leading-tight">
-              Step into the<br />atmosphere.
-            </h2>
-            <p className="text-zinc-300 font-sans text-xs sm:text-sm leading-relaxed max-w-sm mb-6">
-              Our restaurant offers a premium dining space near UPES. With a vibrant atmosphere inspired by Asian night markets, we provide the perfect setting for students and locals in Bidholi to enjoy high-quality Asian food in an immersive environment.
-            </p>
-            <Link 
-              to="/location" 
-              className="text-white hover:text-cinnabar font-serif tracking-widest text-xs uppercase flex items-center gap-2 border-b border-white hover:border-cinnabar pb-1 transition-colors"
-            >
-              View Location & Map <ArrowRight size={14} />
-            </Link>
-          </div>
-        </section>
-
-        {/* ===================== SCENE 5: THE INVITE ===================== */}
-        <section 
-          ref={sectionRefs[4]} 
-          className="h-screen w-full snap-start relative flex flex-col justify-center items-center bg-zinc-950 px-6"
-        >
-          <div className="w-full max-w-md bg-zinc-900/30 border border-zinc-800/80 rounded-3xl p-6 sm:p-10 shadow-2xl backdrop-blur-sm relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1.5 bg-cinnabar" />
-            
-            <div className="text-center mb-6">
-              <span className="text-cinnabar font-serif tracking-[0.3em] text-[10px] sm:text-xs uppercase block mb-2">RESERVE A SEAT</span>
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white uppercase tracking-wider">The Invite</h2>
-              <p className="text-xs text-zinc-400 font-sans mt-2">Book a table at Bidholi's favourite Chinese & Asian restaurant near UPES, Dehradun.</p>
-            </div>
-
-            <form onSubmit={handleBookingSubmit} className="space-y-4">
-              <div className="space-y-1">
-                <label className="text-[9px] tracking-[0.2em] uppercase font-bold text-zinc-400 font-sans flex items-center gap-1.5">
-                  <Calendar size={11} className="text-cinnabar" /> Date
-                </label>
-                <div className="relative">
-                  <select 
-                    value={booking.date} 
-                    onChange={(e) => setBooking({...booking, date: e.target.value})}
-                    className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cinnabar/80 appearance-none font-sans"
-                  >
-                    <option value="Tonight">Tonight</option>
-                    <option value="Tomorrow">Tomorrow</option>
-                    <option value="Friday, Jul 24">Friday, Jul 24</option>
-                    <option value="Saturday, Jul 25">Saturday, Jul 25</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-zinc-400">
-                    <ChevronDown size={14} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-[9px] tracking-[0.2em] uppercase font-bold text-zinc-400 font-sans flex items-center gap-1.5">
-                  <Clock size={11} className="text-cinnabar" /> Time Slot
-                </label>
-                <div className="relative">
-                  <select 
-                    value={booking.time} 
-                    onChange={(e) => setBooking({...booking, time: e.target.value})}
-                    className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cinnabar/80 appearance-none font-sans"
-                  >
-                    <option value="6:00 PM">6:00 PM</option>
-                    <option value="7:30 PM">7:30 PM</option>
-                    <option value="9:00 PM">9:00 PM</option>
-                    <option value="10:30 PM">10:30 PM</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-zinc-400">
-                    <ChevronDown size={14} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-1">
-                <label className="text-[9px] tracking-[0.2em] uppercase font-bold text-zinc-400 font-sans flex items-center gap-1.5">
-                  <Users size={11} className="text-cinnabar" /> Party Size
-                </label>
-                <div className="relative">
-                  <select 
-                    value={booking.guests} 
-                    onChange={(e) => setBooking({...booking, guests: e.target.value})}
-                    className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cinnabar/80 appearance-none font-sans"
-                  >
-                    <option value="1 Guest">1 Guest</option>
-                    <option value="2 Guests">2 Guests</option>
-                    <option value="4 Guests">4 Guests</option>
-                    <option value="6 Guests">6 Guests</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-zinc-400">
-                    <ChevronDown size={14} />
-                  </div>
-                </div>
-              </div>
-
-              <motion.button 
-                type="submit"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full bg-[#E34234] text-white font-serif tracking-widest text-xs uppercase py-3.5 rounded-xl shadow-lg hover:bg-[#cf3527] transition-all mt-4"
-              >
-                Confirm Reservation
-              </motion.button>
-            </form>
-            
-            <div className="mt-6 text-center">
+            <div className="relative z-10 max-w-xl mb-0 md:mb-14">
+              <span className="text-cinnabar font-serif tracking-[0.3em] text-xs uppercase block mb-3">THE ATMOSPHERE</span>
+              <h2 className="font-serif text-4xl sm:text-6xl font-bold text-white uppercase tracking-wider mb-4 leading-tight">
+                Step into the<br />atmosphere.
+              </h2>
+              <p className="text-zinc-300 font-sans text-xs sm:text-sm leading-relaxed max-w-sm mb-6">
+                Our restaurant offers a premium dining space near UPES. With a vibrant atmosphere inspired by Asian night markets, we provide the perfect setting for students and locals in Bidholi to enjoy high-quality Asian food in an immersive environment.
+              </p>
               <Link 
-                to="/contact" 
-                className="text-zinc-400 hover:text-cinnabar text-xs tracking-wider border-b border-zinc-800 hover:border-cinnabar pb-0.5 transition-colors"
+                to="/location" 
+                className="text-white hover:text-cinnabar font-serif tracking-widest text-xs uppercase flex items-center gap-2 border-b border-white hover:border-cinnabar pb-1 transition-colors"
               >
-                Need to submit custom inquiries? Contact Us
+                View Location & Map <ArrowRight size={14} />
               </Link>
             </div>
-          </div>
-          
-          <div className="absolute bottom-8 flex flex-col items-center gap-3.5">
-            <div className="flex items-center gap-5 text-zinc-500">
-              <a 
-                href="https://www.instagram.com/jadedragonwok/" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="hover:text-cinnabar transition-colors cursor-pointer"
-                aria-label="Instagram"
-              >
-                <Instagram size={16} />
-              </a>
-              <a 
-                href="https://facebook.com/jadedragonwok" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="hover:text-cinnabar transition-colors cursor-pointer"
-                aria-label="Facebook"
-              >
-                <Facebook size={16} />
-              </a>
-              <a 
-                href="https://wa.me/919219603033?text=Hi%20Jade%20Dragon%20Wok%20team%2C%20I%20have%20a%20query." 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="hover:text-cinnabar transition-colors cursor-pointer"
-                aria-label="WhatsApp Support & Queries"
-              >
-                <MessageCircle size={16} />
-              </a>
-            </div>
+          </section>
+        </StackCard>
 
-            <div className="text-center text-zinc-600 font-sans text-[10px] tracking-widest uppercase flex items-center gap-1">
-              <Sparkles size={10} className="text-zinc-600" /> Jade Dragon Wok Cafe • Bidholi, Dehradun
-            </div>
-          </div>
-        </section>
+        {/* ===================== SCENE 5: THE INVITE ===================== */}
+        <StackCard index={4} total={TOTAL_SECTIONS} scrollProgress={scrollYProgress}>
+          <section 
+            ref={sectionRefs[4]} 
+            className="h-screen w-full relative flex flex-col justify-center items-center bg-zinc-950 px-6"
+          >
+            <div className="w-full max-w-md bg-zinc-900/30 border border-zinc-800/80 rounded-3xl p-6 sm:p-10 shadow-2xl backdrop-blur-sm relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1.5 bg-cinnabar" />
+              
+              <div className="text-center mb-6">
+                <span className="text-cinnabar font-serif tracking-[0.3em] text-[10px] sm:text-xs uppercase block mb-2">RESERVE A SEAT</span>
+                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-white uppercase tracking-wider">The Invite</h2>
+                <p className="text-xs text-zinc-400 font-sans mt-2">Book a table at Bidholi's favourite Chinese & Asian restaurant near UPES, Dehradun.</p>
+              </div>
 
+              <form onSubmit={handleBookingSubmit} className="space-y-4">
+                <div className="space-y-1">
+                  <label className="text-[9px] tracking-[0.2em] uppercase font-bold text-zinc-400 font-sans flex items-center gap-1.5">
+                    <Calendar size={11} className="text-cinnabar" /> Date
+                  </label>
+                  <div className="relative">
+                    <select 
+                      value={booking.date} 
+                      onChange={(e) => setBooking({...booking, date: e.target.value})}
+                      className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cinnabar/80 appearance-none font-sans"
+                    >
+                      <option value="Tonight">Tonight</option>
+                      <option value="Tomorrow">Tomorrow</option>
+                      <option value="Friday, Jul 24">Friday, Jul 24</option>
+                      <option value="Saturday, Jul 25">Saturday, Jul 25</option>
+                    </select>
+                    <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-zinc-400">
+                      <ChevronDown size={14} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[9px] tracking-[0.2em] uppercase font-bold text-zinc-400 font-sans flex items-center gap-1.5">
+                    <Clock size={11} className="text-cinnabar" /> Time Slot
+                  </label>
+                  <div className="relative">
+                    <select 
+                      value={booking.time} 
+                      onChange={(e) => setBooking({...booking, time: e.target.value})}
+                      className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cinnabar/80 appearance-none font-sans"
+                    >
+                      <option value="6:00 PM">6:00 PM</option>
+                      <option value="7:30 PM">7:30 PM</option>
+                      <option value="9:00 PM">9:00 PM</option>
+                      <option value="10:30 PM">10:30 PM</option>
+                    </select>
+                    <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-zinc-400">
+                      <ChevronDown size={14} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[9px] tracking-[0.2em] uppercase font-bold text-zinc-400 font-sans flex items-center gap-1.5">
+                    <Users size={11} className="text-cinnabar" /> Party Size
+                  </label>
+                  <div className="relative">
+                    <select 
+                      value={booking.guests} 
+                      onChange={(e) => setBooking({...booking, guests: e.target.value})}
+                      className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-cinnabar/80 appearance-none font-sans"
+                    >
+                      <option value="1 Guest">1 Guest</option>
+                      <option value="2 Guests">2 Guests</option>
+                      <option value="4 Guests">4 Guests</option>
+                      <option value="6 Guests">6 Guests</option>
+                    </select>
+                    <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-zinc-400">
+                      <ChevronDown size={14} />
+                    </div>
+                  </div>
+                </div>
+
+                <motion.button 
+                  type="submit"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full bg-[#E34234] text-white font-serif tracking-widest text-xs uppercase py-3.5 rounded-xl shadow-lg hover:bg-[#cf3527] transition-all mt-4 cursor-pointer"
+                >
+                  Confirm Reservation
+                </motion.button>
+              </form>
+              
+              <div className="mt-6 text-center">
+                <Link 
+                  to="/contact" 
+                  className="text-zinc-400 hover:text-cinnabar text-xs tracking-wider border-b border-zinc-800 hover:border-cinnabar pb-0.5 transition-colors"
+                >
+                  Need to submit custom inquiries? Contact Us
+                </Link>
+              </div>
+            </div>
+            
+            <div className="absolute bottom-8 flex flex-col items-center gap-3.5">
+              <div className="flex items-center gap-5 text-zinc-500">
+                <a 
+                  href="https://www.instagram.com/jadedragonwok/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="hover:text-cinnabar transition-colors cursor-pointer"
+                  aria-label="Instagram"
+                >
+                  <Instagram size={16} />
+                </a>
+                <a 
+                  href="https://facebook.com/jadedragonwok" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="hover:text-cinnabar transition-colors cursor-pointer"
+                  aria-label="Facebook"
+                >
+                  <Facebook size={16} />
+                </a>
+                <a 
+                  href="https://wa.me/919219603033?text=Hi%20Jade%20Dragon%20Wok%20team%2C%20I%20have%20a%20query." 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="hover:text-cinnabar transition-colors cursor-pointer"
+                  aria-label="WhatsApp Support & Queries"
+                >
+                  <MessageCircle size={16} />
+                </a>
+              </div>
+
+              <div className="text-center text-zinc-600 font-sans text-[10px] tracking-widest uppercase flex items-center gap-1">
+                <Sparkles size={10} className="text-zinc-600" /> Jade Dragon Wok Cafe • Bidholi, Dehradun
+              </div>
+            </div>
+          </section>
+        </StackCard>
       </main>
 
     </div>

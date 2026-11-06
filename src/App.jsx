@@ -46,7 +46,15 @@ function AppContent() {
 
   const scrollToSection = (index) => {
     if (isHomePage) {
-      sectionRefs[index].current?.scrollIntoView({ behavior: 'smooth' });
+      const mainEl = document.querySelector('main');
+      if (mainEl) {
+        mainEl.scrollTo({
+          top: index * mainEl.clientHeight,
+          behavior: 'smooth'
+        });
+      } else {
+        sectionRefs[index].current?.scrollIntoView({ behavior: 'smooth' });
+      }
       setActiveSection(index);
     }
   };
@@ -733,7 +741,7 @@ function AppContent() {
       )}
 
       {/* ROUTE DEFINITIONS */}
-      <div className={`h-full w-full ${isHomePage ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+      <div className={`h-full w-full ${isHomePage ? 'overflow-hidden' : 'overflow-y-auto'}`} id="main-content-area">
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route 
