@@ -85,26 +85,13 @@ export default function Location() {
         {/* Map iframe */}
         <div className="lg:col-span-2 h-[350px] lg:h-auto rounded-3xl overflow-hidden relative border border-zinc-800 bg-zinc-900/20 min-h-[350px]">
           <iframe 
-            src="https://maps.google.com/maps?q=30.404477,77.968166&t=&z=18&ie=UTF8&iwloc=&output=embed" 
-            className="w-full h-full grayscale invert opacity-85 contrast-125 filter hue-rotate-180 border-0"
+            src="https://maps.google.com/maps?q=30.404477,77.968166&t=&z=17&ie=UTF8&iwloc=&output=embed" 
+            className="w-full h-full invert opacity-85 contrast-125 filter hue-rotate-180 border-0"
             allowFullScreen="" 
             loading="lazy" 
             referrerPolicy="no-referrer-when-downgrade"
             title="Jade Dragon Wok Bidholi Location Map"
           />
-          {/* Custom prominent pin marker overlay */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full z-10 pointer-events-none flex flex-col items-center">
-            <div className="relative">
-              <div className="w-8 h-8 bg-cinnabar rounded-full border-[3px] border-white shadow-[0_0_20px_rgba(227,66,52,0.6)] flex items-center justify-center">
-                <MapPin size={14} className="text-white" />
-              </div>
-              <div className="w-3 h-3 bg-cinnabar rotate-45 absolute -bottom-1.5 left-1/2 -translate-x-1/2 border-r-[3px] border-b-[3px] border-white" />
-            </div>
-            <div className="mt-2 bg-zinc-900/95 border border-cinnabar/40 rounded-lg px-2.5 py-1 shadow-xl">
-              <span className="text-[8px] tracking-[0.15em] uppercase text-white font-serif font-bold whitespace-nowrap">Jade Dragon Wok</span>
-            </div>
-            <div className="w-4 h-4 bg-cinnabar/30 rounded-full animate-ping absolute top-1 left-1/2 -translate-x-1/2" />
-          </div>
           <div className="absolute top-4 left-4 bg-zinc-900/90 border border-zinc-800/80 rounded-xl px-3 py-1.5 text-[9px] tracking-wider uppercase text-zinc-200 shadow-xl flex items-center gap-2 pointer-events-none">
             <MapPin size={10} className="text-cinnabar animate-pulse" /> Kharakhet, Uttarakhand
           </div>
